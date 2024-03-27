@@ -1,7 +1,8 @@
+<!--TODO-->
 <template>
   <mavon-editor
     ref="md"
-    v-model="content"
+    :value="content"
     style="z-index: auto"
     @imgAdd="$imgAdd"
     @imgDel="$imgDel"
@@ -10,14 +11,15 @@
 </template>
 
 <script>
-import { mavonEditor } from 'mavon-editor'
+import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import { checkImageBeforeUpload, deleteFile, uploadFile } from '@/services/website'
+import { message } from 'ant-design-vue'
 
 export default {
   name: 'MarkdownEditor',
   components: {
-    mavonEditor
+    mavonEditor: mavonEditor.mavonEditor
   },
   props: ['value'],
   data () {
@@ -60,20 +62,20 @@ export default {
      */
     $imgDel (pos) {
       deleteFile({ url: pos[0] }).then(() => {
-        this.$message.success('成功删除图片' + pos[1].name)
+        message.success('成功删除图片' + pos[1].name)
       }).catch(err => {
-        this.$message.destroy()
+        message.destroy()
         switch (err.status) {
           case 401: {
-            this.$message.error('无权限：请检查您的登录状态')
+            message.error('无权限：请检查您的登录状态')
             break
           }
           case 404: {
-            this.$message.warn('图片不存在！已忽略本次操作')
+            message.warn('图片不存在！已忽略本次操作')
             break
           }
           default: {
-            this.$message.error(err.toString())
+            message.error(err.toString())
           }
         }
       })

@@ -3,13 +3,13 @@
     :data-source="listSource || []"
     :pagination="pagination"
   >
-    <template v-slot:renderItem="item">
+    <template #renderItem="{item}">
       <a-card
         :hoverable="true"
         style="width: 100%;"
       >
         <a-card-meta :description="item.definition.slice(0,100)">
-          <template v-slot:title>
+          <template #title>
             <span style="font-size: 150%">
                <router-link
                  :to="{name:'WordDetails',params:{id:item.id.toString()}}"
@@ -30,7 +30,7 @@
           <a-button type="link">
             <router-link :to="{name:'WordDetails',params:{id:item.id.toString()}}">
               更多
-              <a-icon type="double-right"/>
+              <DoubleRightOutlined/>
             </router-link>
           </a-button>
         </div>
@@ -41,25 +41,22 @@
 </template>
 
 <script>
+import { DoubleRightOutlined } from '@ant-design/icons-vue'
 
 export default {
   name: 'WordListShowing',
+  components: { DoubleRightOutlined },
   props: {
     listSource: {
       type: Array,
       default: Array.from([])
     }
   },
-  computed: {
-    pagination () {
-      return {
-        showQuickJumper: true
-      }
-    }
-  },
   data () {
     return {
-
+      pagination: {
+        showQuickJumper: true
+      }
     }
   }
 }

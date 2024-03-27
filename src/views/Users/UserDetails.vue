@@ -22,7 +22,7 @@
           <UserTag :points_sum="user.points_sum" :type="user.is_admin"></UserTag>
         </a-descriptions-item>
         <a-descriptions-item label="称号">
-          <Title :title="user.title"></Title>
+          <UserTitle :title="user.title"></UserTitle>
         </a-descriptions-item>
         <a-descriptions-item label="头像">
           <a-avatar :size="64" :src="user.avatar" shape="circle"/>
@@ -69,11 +69,11 @@
 </template>
 
 <script>
-import ArticleList from '../../components/Articles/ArticleList'
-import axios from 'axios'
-import UserTag from '../../components/User/UserTag'
-import UserPinyin from '../../components/Pronunciation/UserPinyin'
-import Title from '../../components/User/Title'
+import ArticleList from '@/components/Articles/ArticleList.vue'
+import axios from '@/axios'
+import UserTag from '@/components/User/UserTag.vue'
+import UserPinyin from '@/components/Pronunciation/UserPinyin.vue'
+import UserTitle from '@/components/User/UserTitle.vue'
 import CertificatePane from '@/components/User/CertificatePane.vue'
 
 export default {
@@ -86,7 +86,7 @@ export default {
     UserPinyin,
     UserTag,
     ArticleList,
-    Title
+    UserTitle
   },
   data () {
     return {
@@ -100,7 +100,7 @@ export default {
         registration_time: '2001-01-01 00:00:00',
         login_time: '2001-01-01 00:00:00',
         birthday: '',
-        avatar: 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png',
+        avatar: 'https://cos.edialect.top/website/%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg',
         county: '',
         town: '',
         is_admin: false,

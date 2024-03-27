@@ -13,15 +13,17 @@
             </template>
             <a-card-meta
               :title="item.music.artist+'-'+item.music.title">
-              <div slot="description">
+              <template v-slot:description>
+<div >
                 音乐贡献者：
                 <router-link :to="{name:'UserDetails',params:{id:item.contributor.id.toString()}}">
                   <a-avatar :src="item.contributor.avatar"/>
                   {{ item.contributor.nickname }}
                 </router-link>
               </div>
+</template>
             </a-card-meta>
-            <template slot="actions" class="ant-card-actions">
+            <template v-slot:actions class="ant-card-actions">
               <div>
                 <a-icon key="like" type="like"/>
                 {{ item.music.likes }}

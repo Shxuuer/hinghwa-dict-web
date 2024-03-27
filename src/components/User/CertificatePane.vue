@@ -1,4 +1,5 @@
 <script>
+import axios from '@/axios'
 
 export default {
   name: 'CertificatePane',
@@ -15,7 +16,7 @@ export default {
       this.$router.push({ path: `/users/certificate/${id}` })
     },
     getCerts () {
-      this.$axios.get(`/certs?user=${this.id}`).then(res => {
+      axios.get(`/certs?user=${this.id}`).then(res => {
         this.certs = res.data.certs
       })
     },

@@ -1,12 +1,12 @@
 <template>
   <div>
   <a-alert type="warning" show-icon>
-    <template slot="message">
+    <template v-slot:message>
       数据每15分钟更新一次，榜单内容可能存在延时
     </template>
   </a-alert>
   <a-card>
-    <template slot="title">
+    <template v-slot:title>
       <h2>录音贡献排行榜</h2>
       <h5>
         兴化语记的发展离不开每一位用户的支持，
@@ -35,11 +35,14 @@
           :data-source="rankList"
         >
 <!--          排名-->
-          <div slot="rank" slot-scope="record">
+          <template v-slot:rank="record">
+<div  >
             {{ record.key }}
           </div>
+</template>
 <!--          用户名-->
-          <div slot="contributor" slot-scope="record">
+          <template v-slot:contributor="record">
+<div  >
             <router-link
               v-if="record"
               :to="{ name: 'UserDetails', params: { id: record.contributor.id } }"
@@ -48,10 +51,13 @@
               {{ record.contributor.nickname }}
             </router-link>
           </div>
+</template>
 <!--          贡献语音的数量-->
-          <div slot="amount" slot-scope="record">
+          <template v-slot:amount="record">
+<div  >
               {{ record.amount }}
           </div>
+</template>
         </a-table>
       </a-col>
     </a-row>

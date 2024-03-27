@@ -3,7 +3,6 @@
     <!--标题区域-->
     <h1 style="margin-left: 8vw;margin-top: 20px"> 文章创作中心 </h1>
 
-    <!--这是一条分割线-->
     <a-divider/>
 
     <!--文章封面-->
@@ -20,14 +19,16 @@
       </a-col>
 
       <a-col span="12">
-        <a-input v-model="article.cover"></a-input>
+        <a-input v-model:value="article.cover"></a-input>
         <a-upload
           :before-upload="checkImageBeforeUpload"
           :customRequest="customRequest"
           :show-upload-list="false"
         >
           <a-button :loading="btnCoverLoading">
-            <a-icon type="upload"/>
+            <template #icon>
+              <UploadOutlined/>
+            </template>
             更换封面图片
           </a-button>
         </a-upload>
@@ -47,7 +48,7 @@
         <h3>文章名称 </h3>
       </a-col>
       <a-col span="12">
-        <a-input v-model="article.title" placeholder="输入文章名称"/>
+        <a-input v-model:value="article.title" placeholder="输入文章名称"/>
       </a-col>
     </a-row>
 
@@ -64,7 +65,7 @@
         <h3>文章简介 </h3>
       </a-col>
       <a-col span="12">
-        <a-textarea v-model="article.description" :rows="4" placeholder="输入文章简介"/>
+        <a-textarea v-model:value="article.description" :rows="4" placeholder="输入文章简介"/>
       </a-col>
     </a-row>
 
@@ -74,7 +75,7 @@
       justify="center"
       type="flex"
     >
-      <MarkdownEditor v-model="article.content"/>
+<!--      <MarkdownEditor v-model="article.content"/>-->
       <a-button
         :loading="btnArticleLoading"
         type="primary"
@@ -88,16 +89,18 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/axios'
 import { checkImageBeforeUpload, uploadFile } from '@/services/website'
-import MarkdownEditor from '@/components/Articles/MarkdownEditor'
+import MarkdownEditor from '@/components/Articles/MarkdownEditor.vue'
+import { message, notification } from 'ant-design-vue'
+import { UploadOutlined } from '@ant-design/icons-vue'
 
 export default {
   name: 'ArticleEdit',
-  // props: { articleID: String },
+
   data () {
     return {
-      checkImageBeforeUpload: checkImageBeforeUpload,
+      checkImageBeforeUpload,
       // 用户输入的文章名称和简介
       article: {
         title: '',
@@ -114,7 +117,8 @@ export default {
     }
   },
   components: {
-    MarkdownEditor
+    MarkdownEditor,
+    UploadOutlined
   },
   computed: {
     /**
@@ -137,25 +141,25 @@ export default {
       this.btnArticleLoading = true
       axios.post('/articles', Object.assign({}, this.article)).then(res => {
         this.submit = true
-        this.$message.success('恭喜你，创建成功！')
+        message.success('恭喜你，创建成功！')
         this.$router.push({
           name: 'ArticleDetails',
           params: { id: res.data.id.toString() }
         })
       }).catch(err => {
-        this.$message.destroy()
+        message.destroy()
         switch (err.response.status) {
           case 401: {
-            this.$message.error('登录状态无效！请重新登录！')
+            message.error('登录状态无效！请重新登录！')
             break
           }
           case 400: {
-            this.$message.error('请完成所有内容！')
+            message.error('请完成所有内容！')
             break
           }
           case 500: {
-            this.$message.error('服务器错误！请联系管理员！')
-            this.$message.error('错误内容:' + err.response.data.msg)
+            message.error('服务器错误！请联系管理员！')
+            message.error('错误内容:' + err.response.data.msg)
             break
           }
         }
@@ -178,20 +182,20 @@ export default {
         }
       }).then(() => {
         this.submit = true
-        this.$message.success('文章更新成功！')
+        message.success('文章更新成功！')
         this.$router.push({
           name: 'ArticleDetails',
           params: { id: this.id.toString() }
         })
       }).catch(err => {
-        this.$message.destroy()
+        message.destroy()
         switch (err.response.status) {
           case 401: {
-            this.$message.error('登录状态异常！请重新登录后再试！')
+            message.error('登录状态异常！请重新登录后再试！')
             break
           }
           default: {
-            this.$message.error(err.toString())
+            message.error(err.toString())
           }
         }
       }).finally(() => {
@@ -208,7 +212,7 @@ export default {
         axios.get('/articles/' + this.id).then(res => {
           this.isAuthor = res.data.me.is_author
           if (this.isAuthor === false) {
-            this.$message.error('你没有权限编辑本文！')
+            message.error('你没有权限编辑本文！')
             this.$router.push({ name: 'Forbidden' })
           }
           this.article = res.data.article
@@ -275,7 +279,7 @@ export default {
     const key = 'page'
     if (this.submit === true) deng = true
     if (!deng) {
-      this.$notification.warning({
+      notification.warning({
         key,
         message: '确认离开？',
         description:
@@ -291,7 +295,7 @@ export default {
               on: {
                 click: () => {
                   next()
-                  this.$notification.close(key)
+                  notification.close(key)
                 }
               }
             },

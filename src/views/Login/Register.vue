@@ -109,7 +109,7 @@ export default {
      */
     sendCode (email) {
       this.btnCodeLoading = true
-      axios.post('/website/email', { email: email }).then(
+      axios.post('/website/email', { email }).then(
         () => {
           this.$message.success('验证码已成功发送至' + email)
         }).finally(() => {

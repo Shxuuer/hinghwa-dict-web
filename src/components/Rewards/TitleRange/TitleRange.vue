@@ -1,7 +1,7 @@
 <script>
 
 import TitleCard from '@/components/Rewards/TitleRange/TitleCard.vue'
-import axios from 'axios'
+import axios from '@/axios'
 import TitleFilter from '@/components/Rewards/TitleRange/TitleFilter.vue'
 
 export default {

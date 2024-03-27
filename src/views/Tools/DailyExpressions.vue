@@ -1,11 +1,11 @@
 <template>
   <a-card>
-    <template slot="title">
+    <template v-slot:title>
       <h2>日常用语</h2>
       <h5>英语、普通话、莆仙正字、莆仙拼音共同对照</h5>
     </template>
 
-    <template slot="extra">
+    <template v-slot:extra>
       <a-input-search
         v-model="searchInput"
         placeholder="在全字段中搜索"
@@ -19,7 +19,7 @@
       :loading="{spinning: loading, delay: 500}"
       :pagination="pagination"
     >
-      <template slot="customRender" slot-scope="text">
+      <template v-slot:customRender="text" >
       <span v-if="searchText">
         <template
           v-for="(fragment, i) in text
@@ -116,7 +116,7 @@ export default {
       axios.get('/website/daily-expression', {
         params: {
           pageSize: this.pagination.pageSize,
-          page: page,
+          page,
           keyword: this.searchText
         }
       }).then(res => {

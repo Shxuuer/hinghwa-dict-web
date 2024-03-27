@@ -1,5 +1,5 @@
 <script>
-import Title from '@/components/User/Title.vue'
+import Title from '@/components/User/UserTitle.vue'
 
 export default {
   name: 'TitleCard',

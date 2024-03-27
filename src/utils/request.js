@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '@/axios'
 import { BASE_URL } from '../consts/urls'
 import { message } from 'ant-design-vue'
 

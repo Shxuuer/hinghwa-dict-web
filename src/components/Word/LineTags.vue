@@ -1,14 +1,14 @@
 <template>
   <div>
-    <template v-for="(tag,index) in tags">
-      <a-tag :key="index" :closable="true" @close="tags.splice(index,1)">
+    <template v-for="(tag,index) in tags" :key="index">
+      <a-tag :closable="true" @close="tags.splice(index,1)">
         {{ tag }}
       </a-tag>
     </template>
     <a-input
       v-if="inputVisible"
       ref="input"
-      v-model="inputValue"
+      v-model:value="inputValue"
       :style="{ width: '78px' }"
       size="small"
       type="text"
@@ -16,16 +16,21 @@
       @keyup.enter="handleInputConfirm"
     />
     <a-tag v-else style="background: #fff; borderStyle: dashed;" @click="showInput">
-      <a-icon type="plus"/>
+      <PlusOutlined />
       {{ tips }}
     </a-tag>
   </div>
 </template>
 
 <script>
+import { PlusOutlined } from '@ant-design/icons-vue'
 
 export default {
   name: 'LineTags',
+  components: {
+    PlusOutlined
+  },
+  emits: ['update:value'],
   props: ['value', 'tips'],
   model: {
     prop: 'value'
@@ -42,7 +47,7 @@ export default {
         return this.value
       },
       set (value) {
-        this.$emit('input', value)
+        this.$emit('update:value', value)
       }
     }
   },

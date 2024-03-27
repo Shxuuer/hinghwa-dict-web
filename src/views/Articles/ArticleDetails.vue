@@ -4,7 +4,6 @@
     <a-row :gutter="20" justify="center" type="flex">
       <!--文章主体部分-->
       <a-col span="17">
-        <SelectSearch>
           <!--标题、封面、简介-->
           <a-card>
             <template #title>
@@ -31,7 +30,6 @@
               <comment-list :id="id" :pageSize="8" :parent="0"/>
             </a-spin>
           </a-card>
-        </SelectSearch>
       </a-col>
 
       <!--文章的附加信息-->
@@ -41,22 +39,21 @@
         <a-card style="margin-top: 16px" title="文章信息">
           <h3>文章作者：</h3>
           <a-card-meta :title="article.author.nickname">
-            <router-link
-              slot="avatar"
-              :to="{name:'UserDetails',params:{id:article.author.id.toString()}}"
-            >
-              <a-avatar :src="article.author.avatar"/>
-            </router-link>
+            <template #avatar>
+              <router-link :to="{name:'UserDetails',params:{id:article.author.id.toString()}}">
+                <a-avatar :src="article.author.avatar"/>
+              </router-link>
+            </template>
           </a-card-meta>
           <br>
           <h3> 发布时间:<br>&nbsp;&nbsp;&nbsp;&nbsp;{{ article.publish_time }} </h3>
           <h3> 最近更新:<br>&nbsp;&nbsp;&nbsp;&nbsp;{{ article.update_time }} </h3>
           <h3>
-            <a-icon type="eye"/>
+            <EyeOutlined/>
             阅读量：{{ article.views }}
           </h3>
           <h3>
-            <a-icon type="like"/>
+            <LikeOutlined/>
             点赞量：{{ article.likes }}
           </h3>
         </a-card>
@@ -116,17 +113,19 @@
 </template>
 
 <script>
-import axios from 'axios'
-import CommentList from '../../components/Articles/CommentList'
-import MarkdownViewer from '../../components/Articles/MarkdownViewer'
-import SelectSearch from '@/components/Tools/SelectSearch.vue'
+import axios from '@/axios'
+import CommentList from '../../components/Articles/CommentList.vue'
+import MarkdownViewer from '../../components/Articles/MarkdownViewer.vue'
+import { message } from 'ant-design-vue'
+import { EyeOutlined, LikeOutlined } from '@ant-design/icons-vue'
 
 export default {
   name: 'ArticleDetails',
   components: {
     MarkdownViewer,
     CommentList,
-    SelectSearch
+    EyeOutlined,
+    LikeOutlined
   },
   props: { id: String },
   data () {
@@ -178,7 +177,7 @@ export default {
       this.me = res.data.me
       this.$store.commit('updateComments', this.id)
     }).catch(() => {
-      this.$message.destroy()
+      message.destroy()
       this.$router.replace({ name: 'NotFound' })
     }).finally(() => {
       this.spinning = false
@@ -197,7 +196,7 @@ export default {
      */
     btnLikeClick () {
       if (!this.$store.getters.loginStatus) {
-        this.$message.error('请先登录后再操作哦~')
+        message.error('请先登录后再操作哦~')
         return
       }
       this.btnLikeLoading = true
@@ -212,7 +211,6 @@ export default {
       } else {
         axios.post('/articles/' + this.id + '/like').finally(() => {
           this.me.liked = true
-          // this.btnLikeLoading = false
           setTimeout(() => {
             this.article.likes += 1
             this.btnLikeLoading = false
@@ -226,7 +224,6 @@ export default {
     deleteArticle () {
       this.btnDeleteLoading = true
       axios.delete('/articles/' + this.id).finally(() => {
-        // axios.delete('http://127.0.0.1:4523/mock/404238/articles/' + this.id).finally(() => {
         setTimeout(() => {
           this.btnDeleteLoading = false
           this.hasDeleted = true

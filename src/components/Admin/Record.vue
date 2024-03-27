@@ -1,3 +1,4 @@
+<!--TODO: 大量问题未修改-->
 <template>
   <div>
     <a-modal
@@ -8,11 +9,13 @@
       title="审核意见"
       @cancel="toConfirm=-1"
     >
-      <a-textarea v-model="reason" placeholder="审核结果说明"/>
-      <div slot="footer">
+      <a-textarea v-model:value="reason" placeholder="审核结果说明"/>
+      <template v-slot:footer>
+<div >
         <a-button icon="check" type="primary" @click="handleSubmit(toConfirm,true)"> 审核通过</a-button>
-        <a-button icon="close" type="danger" @click="handleSubmit(toConfirm,false)"> 拒绝通过</a-button>
+        <a-button icon="close" type="ghost" @click="handleSubmit(toConfirm,false)"> 拒绝通过</a-button>
       </div>
+</template>
     </a-modal>
     <div>
       <span>录音筛选：</span>
@@ -31,7 +34,8 @@
       :pagination="pagination"
     >
 
-      <div slot="id" slot-scope="text">
+      <template v-slot:id="text">
+<div  >
         <a
           :href="`${BASE_URL}/admin/word/pronunciation/${text.id}/change/`"
         >
@@ -39,8 +43,10 @@
           {{ text.id }}
         </a>
       </div>
+</template>
 
-      <div slot="word" slot-scope="text">
+      <template v-slot:word="text">
+<div  >
         <router-link
           v-if="text"
           :to="{ name: 'WordDetails', params: { id: text.pronunciation.word_id } }"
@@ -48,8 +54,10 @@
           {{ text.pronunciation.word_word }}
         </router-link>
       </div>
+</template>
 
-      <div slot="contributor" slot-scope="text">
+      <template v-slot:contributor="text">
+<div  >
         <router-link
           v-if="text"
           :to="{ name: 'UserDetails', params: { id: text.contributor.id } }"
@@ -58,8 +66,10 @@
           {{ text.contributor.nickname }}
         </router-link>
       </div>
+</template>
 
-      <div slot="pinyin" slot-scope="text,record,index">
+      <template v-slot:pinyin="text,record,index">
+<div  >
         <span
           v-if="!record.editable"
         >
@@ -71,8 +81,10 @@
           :autosize="true"
         />
       </div>
+</template>
 
-      <div slot="ipa" slot-scope="text,record,index">
+      <template v-slot:ipa="text,record,index">
+<div  >
         <div
           v-if="!record.editable"
         >
@@ -84,25 +96,31 @@
           :autosize="true"
         />
       </div>
+</template>
 
-      <div slot="source" slot-scope="record">
+      <template v-slot:source="record">
+<div  >
         <audio :src="record.source" controls preload="none" style="max-width: 128px"></audio>
       </div>
+</template>
 
 <!--      审核情况列-->
-      <div slot="recordStatus" slot-scope="text"
+      <template v-slot:recordStatus="text">
+<div
            style="width: 70px"
            :class="{pass:text.recordStatus==='已通过',fail:text.recordStatus==='不通过',unreviewed:text.recordStatus==='未审核'}">
         <div>{{ text.recordStatus}}</div>
       </div>
+</template>
 
 <!--      操作列-->
-      <div slot="action" slot-scope="text,record,index">
+      <template v-slot:action="text,record,index">
+<div  >
         <a-button v-if="!text.granted" @click="toConfirm=text.id;reason=''">
           审核
         </a-button>
         <a-popover v-else>
-          <template slot="content">
+          <template v-slot:content>
             审核人
             <router-link
               v-if="text"
@@ -155,6 +173,7 @@
 
         </div>
       </div>
+</template>
     </a-table>
   </div>
 </template>
@@ -167,7 +186,7 @@ export default {
   name: 'Record',
   data () {
     return {
-      BASE_URL: BASE_URL,
+      BASE_URL,
       total: 300,
       recordList: [],
       tableLoading: true,
@@ -272,7 +291,7 @@ export default {
         .get('/pronunciation', {
           params: {
             pageSize: this.pagination.pageSize,
-            page: page,
+            page,
             order: 1,
             granted: statusFilter,
             visibility: passFilter
@@ -306,7 +325,7 @@ export default {
         })
     },
     handleSubmit (id, result) {
-      const obj = { result: result }
+      const obj = { result }
       if (!result && !this.reason) {
         this.$message.warning('审核不通过必须填写情况说明')
         return

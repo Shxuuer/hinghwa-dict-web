@@ -3,7 +3,7 @@ import { mapGetters } from 'vuex'
 import GoodsRange from '@/components/Rewards/GoodsRange/GoodsRange.vue'
 import TitleRange from '@/components/Rewards/TitleRange/TitleRange.vue'
 export default {
-  name: 'Rewards',
+  name: 'RewardsPage',
   components: { TitleRange, GoodsRange },
   computed: {
     ...mapGetters({

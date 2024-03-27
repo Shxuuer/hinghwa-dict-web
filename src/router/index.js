@@ -1,8 +1,6 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import store from '../store'
-
-Vue.use(VueRouter)
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { message } from 'ant-design-vue'
 
 const routes = [
   {
@@ -12,7 +10,7 @@ const routes = [
   {
     path: '/Home',
     name: 'Home',
-    component: () => import('../views/Home')
+    component: () => import('../views/HomePage.vue')
   },
   {
     path: '/About',
@@ -37,7 +35,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/Login/Login.vue')
+    component: () => import('../views/Login/LoginPage.vue')
   },
   {
     path: '/register',
@@ -53,7 +51,7 @@ const routes = [
   {
     path: '/articles',
     name: 'Articles',
-    component: () => import('../views/Articles/Articles.vue')
+    component: () => import('../views/Articles/ArticlesPage.vue')
   },
   {
     path: '/articles/create',
@@ -96,6 +94,14 @@ const routes = [
     name: 'Notification',
     component: () => import('../views/Users/Notification.vue')
   },
+  {
+    path: '/admin/certificate',
+    name: 'AddCertificate',
+    component: () => import('../views/admin/AddCertificate.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
   // 积分
   {
     path: '/rewards',
@@ -111,7 +117,10 @@ const routes = [
   {
     path: '/admin/rewards',
     name: 'AdminRewards',
-    component: () => import('../views/admin/Rewards/Index.vue')
+    component: () => import('../views/admin/Rewards/Index.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/rewards/transactions',
@@ -140,12 +149,12 @@ const routes = [
   {
     path: '/pinyin',
     name: 'Pinyin',
-    component: () => import('../views/Pinyin.vue')
+    component: () => import('../views/PinYin.vue')
   },
   {
     path: '/tools',
     name: 'Tools',
-    component: () => import('../views/Tools/Tools.vue')
+    component: () => import('../views/Tools/ToolsPage.vue')
   },
   {
     path: '/tools/conditions',
@@ -160,7 +169,7 @@ const routes = [
   {
     path: '/tools/QuickRecording/RecordRank',
     name: 'RankList',
-    component: () => import('../components/Pronunciation/RankList')
+    component: () => import('../components/Pronunciation/RankList.vue')
   },
   {
     path: '/tools/characters',
@@ -175,12 +184,18 @@ const routes = [
   {
     path: '/tools/RecordConfirming',
     name: 'RecordConfirming',
-    component: () => import('../views/Tools/RecordConfirming.vue')
+    component: () => import('../views/Tools/RecordConfirming.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/tools/WordConfirming',
     name: 'WordConfirming',
-    component: () => import('../views/Tools/WordConfirming.vue')
+    component: () => import('../views/Tools/WordConfirming.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/tools/Relative',
@@ -211,51 +226,37 @@ const routes = [
     props: true,
     component: () => import('../views/Words/Application.vue')
   },
-  {
-    path: '*',
-    component: () => import('../views/NotFound.vue')
-  },
-  {
-    path: '/NotFound',
-    name: 'NotFound',
-    component: () => import('../views/NotFound.vue')
-  },
-  {
-    path: '/Forbidden',
-    name: 'Forbidden',
-    component: () => import('../views/Forbidden.vue')
-  },
   // 答题区
   {
     path: '/PuxianExam',
     name: 'PuxianExam',
     props: true,
-    component: () => import('../views/Quiz/Quiz')
+    component: () => import('../views/Quiz/Quiz.vue')
   },
   {
     path: '/PuxianExam/Create',
     name: 'QuizCreate',
     props: true,
-    component: () => import('../views/Quiz/QuizEdit')
+    component: () => import('../views/Quiz/QuizEdit.vue')
   },
   {
     path: '/PuxianExam/:id',
     name: 'QuizDetails',
     props: true,
-    component: () => import('../views/Quiz/QuizDetails')
+    component: () => import('../views/Quiz/QuizDetails.vue')
   },
   {
     path: '/PuxianExam/Research',
     name: 'QuizResearch',
     props: true,
-    component: () => import('../views/Quiz/QuizResearch')
+    component: () => import('../views/Quiz/QuizResearch.vue')
   },
   // 词典区
   {
     path: '/Dictionary',
     name: 'Dictionary',
     props: true,
-    component: () => import('../views/Dictionary.vue')
+    component: () => import('../views/DictionaryPage.vue')
   },
   // 翻译区
   {
@@ -277,20 +278,38 @@ const routes = [
         component: () => import('../views/Translation/xtpTranslation.vue')
       }
     ]
+  },
+  {
+    path: '/:catchAll(.*)', // 不识别的path自动匹配404
+    redirect: '/NotFound'
+  },
+  {
+    path: '/NotFound',
+    name: 'NotFound',
+    component: () => import('../views/NotFound.vue')
+  },
+  {
+    path: '/Forbidden',
+    name: 'Forbidden',
+    component: () => import('../views/ForbiddenPage.vue')
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+const router = createRouter({
+  base: '/',
+  history: createWebHashHistory(),
   routes
 })
 
-export default router
-
-router.beforeEach(async (to, from, next) => {
-  store.commit('tab', [to.name])
+router.beforeEach(async (to, from) => {
+  if (to.meta.requiresAuth && !this.$store.getters?.user?.is_admin) {
+    message.error('您没有权限访问此页面')
+    return {
+      path: '/Forbidden'
+    }
+  }
   store.commit('tab1', [to.name])
   store.commit('drawerVisibility', false)
-  next()
 })
+
+export default router

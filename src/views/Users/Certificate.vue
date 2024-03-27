@@ -1,5 +1,6 @@
 <script>
 import QRCode from 'qrcodejs2'
+import moment from 'moment'
 export default {
   name: 'Certificate',
   data () {
@@ -14,11 +15,10 @@ export default {
   methods: {
     // 创建二维码
     async createQRCode () {
-      // eslint-disable-next-line no-new
-      new QRCode('QRCode', {
-        text: `https://pxm.edialect.top/users/certificate/${this.cert.ID}`,
-        width: 180 * this.scale,
-        height: 180 * this.scale,
+      return new QRCode('QRCode', {
+        text: `https://hinghwa.cn/users/certificate/${this.cert.ID}`,
+        width: 230 * this.scale,
+        height: 230 * this.scale,
         colorDark: '#000000',
         colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.H
@@ -43,10 +43,13 @@ export default {
           ctx.drawImage(img, 0, 0, img.width * scale, img.height * scale)
           // 二维码
           const QRCode = document.getElementById('QRCode').getElementsByTagName('img')[0]
-          ctx.drawImage(QRCode, 270 * scale, 2940 * scale, 180 * scale, 180 * scale)
+          ctx.drawImage(QRCode, 330 * scale, 2840 * scale, 230 * scale, 230 * scale)
           // 等级
           ctx.font = `${90 * scale}px Arial`
           fillCenter(ctx, 'Level  ' + this.cert.level, ctx.canvas.width / 2, 1090 * scale, 90 * scale)
+          // 分级
+          const levelString = ['', '初级', '中级', '高级']
+          fillCenter(ctx, levelString[this.cert.level], 540 * scale, 1894 * scale, 80 * scale)
           // 姓名
           ctx.fillStyle = '#837363'
           fillCenter(ctx, this.cert.name, ctx.canvas.width / 2, 1400 * scale, 150 * scale)
@@ -67,10 +70,11 @@ export default {
           fillCenter(ctx, this.cert.scores[4], 1545 * scale, 2240 * scale, 60 * scale)
           // 时间
           ctx.fillStyle = '#000'
-          fillCenter(ctx, this.cert.time, 1910 * scale, 2805 * scale, 75 * scale)
+          fillCenter(ctx, moment(this.cert.time).format('YYYY年MM月DD日'), 1910 * scale, 2805 * scale, 75 * scale)
           // 编号
-          ctx.font = `${22 * scale}px Arial`
-          ctx.fillText(this.cert.ID, 593 * scale, 3013 * scale)
+          ctx.font = `${32 * scale}px Arial`
+          ctx.fillText(`证书编号：${this.cert.ID}`, 610 * scale, 2913 * scale)
+          ctx.fillText('校验地址：hingwa.cn', 610 * scale, 2970 * scale)
           resolve()
         }
       })
@@ -88,11 +92,11 @@ export default {
     printCertificate () {
       const printWindow = window.open('', '_blank')
       printWindow.document.open()
-      printWindow.document.write(`<img src='${document.getElementById('certificate').toDataURL('image/png')}' alt=''/>`)
+      printWindow.document.write(`<img style="width: 794px" src='${document.getElementById('certificate').toDataURL('image/png')}' alt=''/>`)
       setTimeout(() => {
         printWindow.print()
         printWindow.close()
-      }, 500)
+      }, 0)
     },
     // 获取证书信息
     fetchCertificate () {
@@ -121,7 +125,7 @@ export default {
       <a-row style="font-size: 1.5em; color: #333;margin-top: 20px">未找到该证书</a-row>
     </a-row>
     <a-row style="text-align: center" v-if="!notFound">
-      <canvas id="certificate"/>
+      <canvas style="width: 794px;" id="certificate"/>
     </a-row>
     <a-row style="text-align: center;margin-top: 20px" v-if="!notFound">
       <a-button-group>

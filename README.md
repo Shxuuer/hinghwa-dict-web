@@ -1,13 +1,29 @@
-# hinghwa-dict-web
+# hingwa-v3
 
-## 项目简介
+This template should help get you started developing with Vue 3 in Vite.
 
-兴化语记是 [E方言](https://edialect.top) 中`莆仙方言公共服务包` 的别称，主要服务对象包括福建省莆田市及其周边地区的莆仙方言使用者。
+## Recommended IDE Setup
 
-兴化语记目前包括网页端 ( https://pxm.edialect.top , https://hinghwa.cn )，微信小程序端（兴化语记），计划在本项目中通过 `uni-app` 增加移动端 ( https://m.pxm.edialect.top )，QQ小程序端等。
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## 技术栈
+## Customize configuration
 
-> 项目采取前后端分离架构，其他的前端仓库可前往 https://github.com/e-dialect 进行寻找
+See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-采用 `Vue2` + `Ant Design of Vue` 开发。
+## Project Setup
+
+```sh
+npm install
+```
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Compile and Minify for Production
+
+```sh
+npm run build
+```

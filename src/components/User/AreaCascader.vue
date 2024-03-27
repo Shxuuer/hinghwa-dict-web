@@ -1,6 +1,6 @@
 <template>
   <a-cascader
-    v-model="option"
+    v-model:value="option"
     :disabled="disabled"
     :options="towns"
     placeholder="默认发音乡镇"

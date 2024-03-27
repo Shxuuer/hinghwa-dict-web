@@ -1,50 +1,52 @@
 <template>
   <a-modal
     :closable="false"
-    :visible="visible"
+    :open="visible"
     cancelText="取消"
     okText="提交"
     title="提交录音"
     @cancel="handleCancel()"
     @ok="handleOk()"
   >
-    <a-form-model ref="ruleForm" :model="form" :rules="rules">
-      <a-form-model-item label="词条" prop="item">
+    <a-form ref="ruleForm" :model="form" :rules="rules">
+      <a-form-item label="词条" prop="item">
         <h3>{{ form.item }} </h3>
-      </a-form-model-item>
-      <a-form-model-item label="释义">
+      </a-form-item>
+      <a-form-item label="释义">
         {{ form.definition }}
-      </a-form-model-item>
-      <a-form-model-item label="拼音" prop="pinyin">
-        <a-input v-model="form.pinyin"/>
-      </a-form-model-item>
-      <a-form-model-item label="国际音标" prop="ipa">
-        <a-input v-model="form.ipa"/>
-      </a-form-model-item>
-      <a-form-model-item label="发音人乡镇" prop="town">
+      </a-form-item>
+      <a-form-item label="拼音" prop="pinyin">
+        <a-input v-model:value="form.pinyin"/>
+      </a-form-item>
+      <a-form-item label="国际音标" prop="ipa">
+        <a-input v-model:value="form.ipa"/>
+      </a-form-item>
+      <a-form-item label="发音人乡镇" prop="town">
         <AreaCascader
-          :county.sync="form.county"
-          :town.sync="form.town"
+          v-model:county="form.county"
+          v-model:town="form.town"
         />
-      </a-form-model-item>
-      <a-form-model-item label="录音">
+      </a-form-item>
+      <a-form-item label="录音">
         <a-row align="middle" justify="center" type="flex">
           <a-col :span="4">
             <a-button
               v-if="!recording"
-              icon="audio"
               shape="circle"
               size="large"
               style="width: 50px;height: 50px "
               @click="startRecording"
-            />
+            >
+              <AudioOutlined />
+            </a-button>
             <a-button
               v-else
-              icon="pause"
               shape="circle"
               style="width: 50px;height: 50px "
               @click="stopRecording"
-            />
+            >
+              <PauseOutlined />
+            </a-button>
           </a-col>
           <a-col :span="4">
             {{
@@ -53,8 +55,8 @@
             }}
           </a-col>
         </a-row>
-      </a-form-model-item>
-      <a-form-model-item v-show="recordSourceURL" label="效果试听">
+      </a-form-item>
+      <a-form-item v-show="recordSourceURL" label="效果试听">
         <div
           style="text-align: center">
           <audio
@@ -62,20 +64,22 @@
             controls
           />
         </div>
-      </a-form-model-item>
-    </a-form-model>
+      </a-form-item>
+    </a-form>
 
   </a-modal>
 </template>
 
 <script>
-import axios from 'axios'
-import AreaCascader from '../User/AreaCascader'
+import axios from '@/axios'
+import AreaCascader from '../User/AreaCascader.vue'
+import { message } from 'ant-design-vue'
+import { AudioOutlined, PauseOutlined } from '@ant-design/icons-vue'
 
 export default {
   name: 'Recording',
   props: ['visible', 'form', 'onCancel'],
-  components: { AreaCascader },
+  components: { AreaCascader, AudioOutlined, PauseOutlined },
   data () {
     return {
       recorderReady: false,
@@ -112,15 +116,15 @@ export default {
     handleOk () {
       this.$refs.ruleForm.validate(valid => {
         if (!this.form.town || this.form.town.length === 0) {
-          this.$message.error('请先选择发音人的乡镇哦~')
+          message.error('请先选择发音人的乡镇哦~')
           return
         }
         if (!valid) {
-          this.$message.error('请先完善输入信息哦~')
+          message.error('请先完善输入信息哦~')
           return false
         }
         if (!this.recordSourceURL) {
-          this.$message.error('请先完成录音')
+          message.error('请先完成录音')
           return
         }
         // 上传音频文件
@@ -135,7 +139,7 @@ export default {
           this.form.source = ress.data.url
           // 提交发音记录
           axios.post('/pronunciation', { pronunciation: this.form }).then(() => {
-            this.$message.success('提交成功！请等待审核通过~')
+            message.success('提交成功！请等待审核通过~')
             this.handleCancel()
           })
         })
@@ -182,11 +186,11 @@ export default {
               this.recording = true
             },
             () => {
-              this.$message.error('授权失败！请允许网站使用麦克风！')
+              message.error('授权失败！请允许网站使用麦克风！')
             }
           )
         } else {
-          this.$message.error('暂不支持本浏览器')
+          message.error('暂不支持本浏览器')
         }
       } else {
         this.mediaRecorder.start()

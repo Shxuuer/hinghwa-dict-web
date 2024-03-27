@@ -1,7 +1,8 @@
 <script>
 import SingleWordMode from '@/components/Word/WordList/SingleWordMode.vue'
 import MultiWordsMode from '@/components/Word/WordList/MultiWordsMode.vue'
-import axios from 'axios'
+import axios from '@/axios'
+import { message } from 'ant-design-vue'
 export default {
   name: 'WordListDetail',
   components: { SingleWordMode, MultiWordsMode },
@@ -57,7 +58,7 @@ export default {
     },
     async delList () {
       await axios.delete(`/lists/${this.$route.params.id}`).then(() => {
-        this.$message.success('删除成功')
+        message.success('删除成功')
         this.$router.push({ name: 'WordList' })
       })
     }
@@ -88,14 +89,14 @@ export default {
           <a-descriptions-item label="词语数量">{{list.length}}</a-descriptions-item>
           <a-descriptions-item v-if="isMine">
             <a-button type="primary" @click="$router.push(`/wordlist/editor?id=${list.id}`)">编辑</a-button>
-            <a-button type="danger" @click="delList" style="margin-left: 16px">删除</a-button>
+            <a-button type="primary" danger @click="delList" style="margin-left: 16px">删除</a-button>
           </a-descriptions-item>
         </a-descriptions>
       </a-col>
     </a-row>
     <a-divider/>
     <div style="margin: 20px auto 20px 20px;position: relative">
-      <span style="margin-right: 20px;font-size: 1.1em;top: 1px;position: relative">单个词语</span><a-switch v-model="singleWordMode" checked-children="开" un-checked-children="关"/>
+      <span style="margin-right: 20px;font-size: 1.1em;top: 1px;position: relative">单个词语</span><a-switch v-model:checked="singleWordMode" checked-children="开" un-checked-children="关"/>
     </div>
     <template v-if="singleWordMode">
       <SingleWordMode :list="list.words"/>

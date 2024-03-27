@@ -1,6 +1,6 @@
 <template>
   <a-select
-    v-model="articles"
+    v-model:value="articles"
     :filter-option="false"
     :labelInValue="true"
     :maxTagTextLength="30"
@@ -12,7 +12,9 @@
     style="width: 100%"
     @search="handleArticleSearch"
   >
-    <a-spin v-if="fetching" slot="notFoundContent" size="small"/>
+    <template #notFoundContent>
+      <a-spin v-if="fetching"  size="small"/>
+    </template>
     <a-select-option
       v-for="(item,index) in options_article"
       :key="index"
@@ -25,11 +27,12 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/axios'
 
 export default {
   name: 'SelectArticle',
   props: ['value', 'defaultValue'],
+  emits: ['update:value'],
   data () {
     return {
       options_article: [],
@@ -44,7 +47,7 @@ export default {
       },
       set (value) {
         this.articles_ = value
-        this.$emit('input', value)
+        this.$emit('update:value', value)
       }
     }
   },

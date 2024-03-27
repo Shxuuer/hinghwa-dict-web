@@ -54,18 +54,6 @@ function analyseDefinition (definition) {
 
 export const order = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩']
 
-// [{
-//   content: 'content',
-//   example: [
-//     {
-//       type: '例',
-//       content: '',
-//       explain: ''
-//     }
-//   ]
-// }
-// ]
-
 /**
  * 将数据库中的释义字符串进行拆分
  * @param definition 释义字符串

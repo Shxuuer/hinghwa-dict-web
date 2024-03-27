@@ -2,7 +2,7 @@
   <a-spin :spinning="drawerLoading">
 
     <a-descriptions>
-      <template v-slot:title>
+      <template #title>
         <h3>
           <router-link :to="{name:'UserDetails',params:{id:user.id.toString()}}">
             个人信息
@@ -106,7 +106,8 @@
     <a-divider/>
 
     <a-button
-      type="danger"
+      type="primary"
+      danger
       @click="$store.commit('userLogout');$router.go(0)"
     >
       登出
@@ -116,8 +117,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import UserTag from '../User/UserTag'
-import Title from '@/components/User/Title.vue'
+import UserTag from '../User/UserTag.vue'
+import Title from '@/components/User/UserTitle.vue'
 export default {
   name: 'UserPage',
   components: {

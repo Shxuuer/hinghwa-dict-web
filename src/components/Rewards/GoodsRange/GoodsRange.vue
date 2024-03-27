@@ -1,7 +1,7 @@
 <script>
 import GoodsCard from '@/components/Rewards/GoodsRange/GoodsCard.vue'
 import GoodsFilter from '@/components/Rewards/GoodsRange/GoodsFilter.vue'
-import axios from 'axios'
+import axios from '@/axios'
 
 export default {
   name: 'GoodsRange',
@@ -49,12 +49,12 @@ export default {
   <div style="display: flex;flex-direction: column;align-items: center;">
     <a-card title="兑换商品" class="rewards-card" :loading="onLoading">
       <template #extra>
-        <GoodsFilter @sendFilter="res => {filter = res;updateTable()}"/>
+        <GoodsFilter @sendFilter="res => {filter = res;this.updateTable()}"/>
       </template>
       <GoodsCard v-for="(item, index) in goods" :detail="item" :key="index"/>
     </a-card>
     <a-pagination :total="dataVolume" :defaultPageSize="8"
-                  v-model="thisPage" @change="updateTable"
+                  v-model:current="thisPage" @change="updateTable"
                   style="margin: auto auto 20px auto"/>
   </div>
 </template>

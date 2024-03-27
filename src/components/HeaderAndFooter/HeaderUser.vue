@@ -9,7 +9,9 @@
         <template v-slot:content>
           <div>请登录您的账户</div>
         </template>
-        <a-icon type="user"/>
+        <a-avatar shape="square" :size="40">
+          <template #icon><UserOutlined /></template>
+        </a-avatar>
       </a-popover>
     </a-space>
   </div>
@@ -52,7 +54,8 @@
           <a-col :span="3">
             <router-link :to="{name:'Notification'}">
               <a-badge :count="unread">
-                <a-button icon="mail" type="dashed">
+                <a-button type="dashed">
+                  <MailOutlined />
                   邮箱
                 </a-button>
               </a-badge>
@@ -68,13 +71,16 @@
 </template>
 
 <script>
-import UserPage from '../../components/HeaderAndFooter/UserPage'
-import store from '../../store'
+import UserPage from '../../components/HeaderAndFooter/UserPage.vue'
+import store from '@/store'
+import { UserOutlined, MailOutlined } from '@ant-design/icons-vue'
 
 export default {
   name: 'HeaderUser',
   components: {
-    UserPage
+    UserPage,
+    UserOutlined,
+    MailOutlined
   },
   computed: {
     hasLogin () {

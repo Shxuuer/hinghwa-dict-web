@@ -5,7 +5,7 @@
       class="select-word"
       :style="{top:selectY,left:selectX,'z-index':2400,'max-width':'400px',visibility:selectWordVisible}"
     >
-      <template slot="title">
+      <template v-slot:title>
         <span>划线取词</span>
         <span style="color: gray; font-size: smaller">（功能开发中）</span>
       </template>

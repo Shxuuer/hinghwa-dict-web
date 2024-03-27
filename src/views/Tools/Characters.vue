@@ -1,10 +1,10 @@
 <template>
   <a-card>
-    <template slot="title">
+    <template #title>
       <h2>输入汉字查拼音</h2>
       <h5>忽略所有非汉字字符，暂不支持搜索繁体字</h5>
       <a-input-search
-        v-model="searchContent"
+        v-model:value="searchContent"
         enter-button
         placeholder="请输入搜索内容"
         size="large"
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import PinyinList from '../../components/Tools/PinyinList'
+import PinyinList from '../../components/Tools/PinyinList.vue'
 
 export default {
   name: 'Characters',

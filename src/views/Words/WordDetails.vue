@@ -2,25 +2,22 @@
   <a-spin :delay="500" :spinning="spinning">
     <a-card style="padding:32px">
 
-      <template v-slot:title>
-        <h1 style="padding-left:32px; color: rgb(26,26,73); font-size:250%">
-          <strong>
-            {{ word.word }}
-          </strong>
-        </h1>
-        <span style="font-size: 100%;padding-left: 50px">
-          {{ word.standard_pinyin }}
-        </span>
-        <span style="font-size: 100%;color: rgb(155,155,155);padding-left: 18px">
-          / {{ word.standard_ipa }}/
-        </span>
+      <template #title>
+        <h1 style="padding-left:32px; color: rgb(26,26,73); font-size:250%"><strong> {{ word.word }} </strong></h1>
+        <span style="font-size: 100%;padding-left: 50px"> {{ word.standard_pinyin }} </span>
+        <span style="font-size: 100%;color: rgb(155,155,155);padding-left: 18px"> / {{ word.standard_ipa }}/ </span>
         <PlaySoundButton :url="word.source" :pinyin="word.standard_pinyin" :ipa="word.standard_ipa"/>
       </template>
 
-      <template v-slot:extra>
+      <template #extra>
         <a-row>
           <router-link :to="{name:'WordEdit',params:{id:word.id}}">
-            <a-button icon="edit" size="small"> 编辑词条</a-button>
+            <a-button size="small">
+              <template #icon>
+                <EditOutlined/>
+              </template>
+              编辑词条
+            </a-button>
           </router-link>
         </a-row>
         <a-row style="padding-top: 16px">
@@ -29,7 +26,6 @@
             {{ word.contributor.nickname }}
           </router-link>
         </a-row>
-
       </template>
 
       <!--释义-->
@@ -38,14 +34,14 @@
       </div>
       <a-row justify="center" type="flex">
         <a-col :span="22">
-          <Definition :definition="word.definition"/>
+          <DefinitionShow :definition="word.definition"/>
         </a-col>
       </a-row>
 
       <div v-if="word.mandarin.length" style="padding-top:32px">
         <a-tag color="rgb(179, 7, 30,0.7)"> 普通话词汇</a-tag>
-        <template v-for="(tag,index) in word.mandarin">
-          <a-tag :key="index" color="blue">
+        <template v-for="(tag,index) in word.mandarin" :key="index">
+          <a-tag color="blue">
             <a :href="`https://www.baidu.com/s?wd=${tag}`" target="_blank">{{ tag }}</a>
           </a-tag>
         </template>
@@ -54,9 +50,9 @@
       <div v-if="word.related_words.length" style="padding-top:32px">
         <a-tag color="rgb(179, 7, 30,0.7)">相关词汇</a-tag>
         <router-link
-          v-for="(tag,index) in word.related_words"
-          :key="index"
-          :to="{name:'WordDetails',params:{id:tag.id}}"
+            v-for="(tag,index) in word.related_words"
+            :key="index"
+            :to="{name:'WordDetails',params:{id:tag.id}}"
         >
           <a-tag color="blue">{{ tag.word }}</a-tag>
         </router-link>
@@ -76,35 +72,41 @@
       <div style="padding-top:32px">
         <a-tag color="rgb(179, 7, 30,0.7)"> 发音</a-tag>
         <a-button
-          size="small"
-          type="dashed"
-          @click="openRecordingModal"
+            size="small"
+            type="dashed"
+            @click="openRecordingModal"
         >
           我要贡献
         </a-button>
         <recording
-          :form="form"
-          :onCancel="()=>{this.visible=false}"
-          :visible="visible"
+            :form="form"
+            :onCancel="()=>{this.visible=false}"
+            :visible="visible"
         />
       </div>
+
       <a-row justify="center" type="flex">
         <a-col :span="22">
           <a-table
-            :columns="columns"
-            :data-source="pronunciation"
-            :pagination="{ simple: true}"
+              :columns="columns"
+              :data-source="pronunciation"
+              :pagination="{ simple: true}"
           >
-            <span slot="contributor" slot-scope="text, record">
-              <router-link :to="{name:'UserDetails',params:{id:record.contributor.id.toString()}}">
-                <a-avatar :src="record.contributor.avatar"/>
-                {{ record.contributor.nickname }}
-              </router-link>
-            </span>
-            <span slot="customTitle"> Name</span>
-            <span slot="action" slot-scope="text, record">
-              <audio :src="record.pronunciation.source" controls/>
-            </span>
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'contributor'">
+                <span>
+                  <router-link :to="{name:'UserDetails',params:{id:record.contributor.id.toString()}}">
+                    <a-avatar :src="record.contributor.avatar"/>
+                    {{ record.contributor.nickname }}
+                  </router-link>
+                </span>
+              </template>
+              <template v-if="column.key === 'action'">
+                <span>
+                  <audio :src="record.pronunciation.source" controls/>
+                </span>
+              </template>
+            </template>
           </a-table>
         </a-col>
       </a-row>
@@ -115,14 +117,14 @@
         <a-row justify="center" type="flex">
           <a-col :span="22">
             <ArticleList
-              :list-data="word.related_articles.map(item=>{return item.id})"
-              :page-size="3"
+                :list-data="word.related_articles.map(item=>{return item.id})"
+                :page-size="3"
             />
           </a-col>
         </a-row>
       </div>
       <p style="margin-top: 40px">
-        <a-icon type="eye"></a-icon>
+        <EyeOutlined/>
         访问量:{{ word.views }}
       </p>
     </a-card>
@@ -131,13 +133,14 @@
 
 <script>
 
-import axios from 'axios'
-import ArticleList from '../../components/Articles/ArticleList'
-import Recording from '../../components/Pronunciation/Recording'
-import DefinitionShow from '../../components/Word/DefinitionShow'
-import PlaySoundButton from '../../components/Tools/PlaySoundButton'
-import MarkdownViewer from '../../components/Articles/MarkdownViewer'
-import { getWordDetails } from '@/services/words'
+import axios from '@/axios'
+import ArticleList from '../../components/Articles/ArticleList.vue'
+import Recording from '../../components/Pronunciation/Recording.vue'
+import DefinitionShow from '../../components/Word/DefinitionShow.vue'
+import PlaySoundButton from '../../components/Tools/PlaySoundButton.vue'
+import MarkdownViewer from '../../components/Articles/MarkdownViewer.vue'
+import { EditOutlined, EyeOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 
 export default {
   name: 'WordDetails',
@@ -145,9 +148,11 @@ export default {
   components: {
     MarkdownViewer,
     PlaySoundButton,
-    Definition: DefinitionShow,
+    DefinitionShow,
     Recording,
-    ArticleList
+    ArticleList,
+    EditOutlined,
+    EyeOutlined
   },
   data () {
     return {
@@ -215,28 +220,7 @@ export default {
         }
       ],
       standard_pronunciation: null,
-      pronunciation: [
-        // {
-        //   key: 1,
-        //   pronunciation: {
-        //     id: 19,
-        //     word_id: 16,
-        //     word_word: '阿尾哥',
-        //     source: '',
-        //     ipa: 'ap1 puai13 ko533',
-        //     pinyin: 'a1 bue3 go1',
-        //     contributor: 5,
-        //     county: '涵江',
-        //     town: '国欢',
-        //     visibility: true
-        //   },
-        //   contributor: {
-        //     id: 5,
-        //     nickname: '这只是一个测试账号呢',
-        //     avatar: ''
-        //   }
-        // }
-      ]
+      pronunciation: []
     }
   },
   created () {
@@ -252,8 +236,8 @@ export default {
      * 获取当前这个词条的具体信息
      */
     async getWordDetails () {
-      await getWordDetails(this.id).then(res => {
-        this.word = res.word
+      await axios.get(`/words/${this.id}`).then(res => {
+        this.word = res.data.word
         this.form = {
           word: this.word.id,
           item: this.word.word,
@@ -262,7 +246,7 @@ export default {
           ipa: this.word.standard_ipa
         }
       }).catch(() => {
-        this.$message.destroy()
+        message.destroy()
         this.$router.replace({ name: 'NotFound' })
       })
       await axios.get('/pronunciation', { params: { word: this.id } }).then(res => {
@@ -277,14 +261,14 @@ export default {
      */
     openRecordingModal () {
       if (!this.$store.getters.loginStatus) {
-        this.$message.error('请先登录后再贡献录音哦~')
+        message.error('请先登录后再贡献录音哦~')
         return
       }
       if (this.$store.getters.user.county !== '' && this.$store.getters.user.town !== '') {
         this.form.county = this.$store.getters.user.county
         this.form.town = this.$store.getters.user.town
       } else {
-        this.$message.info('您还未设置账号的城乡地址，请尽快设置哦~')
+        message.info('您还未设置账号的城乡地址，请尽快设置哦~')
       }
       this.visible = true
     }

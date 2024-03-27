@@ -114,9 +114,11 @@ export default {
               <a-avatar :src="item.from.avatar"/>
             </template>
           </a-list-item-meta>
-          <span slot="actions">
+          <template v-slot:actions>
+<span >
             <a-button type="link" @click="handleView(index)">查看</a-button>
           </span>
+</template>
         </a-list-item>
       </template>
     </a-list>

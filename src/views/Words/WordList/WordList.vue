@@ -1,4 +1,7 @@
 <script>
+import axios from '@/axios/index.js'
+import { message } from 'ant-design-vue'
+
 export default {
   name: 'WordList',
   data () {
@@ -20,7 +23,7 @@ export default {
           dataIndex: 'author',
           key: 'author',
           width: '10%',
-          customRender: (text) => {
+          customRender: ({ text }) => {
             return text.nickname
           }
         },
@@ -28,7 +31,8 @@ export default {
           title: '创建时间',
           dataIndex: 'createTime',
           key: 'createTime',
-          customRender (text) {
+          width: '10%',
+          customRender ({ text }) {
             return dateFormat(text)
           }
         },
@@ -36,7 +40,8 @@ export default {
           title: '修改时间',
           dataIndex: 'updateTime',
           key: 'updateTime',
-          customRender: (text) => {
+          width: '10%',
+          customRender: ({ text }) => {
             return dateFormat(text)
           }
         },
@@ -60,18 +65,16 @@ export default {
   },
   methods: {
     async getList () {
-      await this.$axios.get('/lists').then(res => {
+      await axios.get('/lists').then(res => {
         this.list = res.data.lists
       }).catch(() => {
-        this.$message.error('拉取词单列表失败')
+        message.error('拉取词单列表失败')
       })
     },
     customRow (record) {
       return {
-        on: {
-          click: () => {
-            this.$router.push(`/wordlist/${record.id}`)
-          }
+        onClick: () => {
+          this.$router.push(`/wordlist/${record.id}`)
         }
       }
     },
@@ -99,16 +102,16 @@ export default {
 <template>
   <div class="body">
     <a-page-header style="border: 1px solid rgb(235, 237, 240)" title="词单"/>
-    <a-row style="margin: 20px auto 10px auto">
-      <a-input-search placeholder="搜索词单" style="width: 200px;margin-left: 25px" v-model="searchValue" @change="search"/>
+    <div style="margin: 20px auto 10px auto">
+      <a-input placeholder="搜索词单" style="width: 200px;margin-left: 45px" v-model:value="searchValue" @change="search"/>
       <a-button type="primary" style="margin-left: 15px" v-if="onSearch" @click="onSearch=false;searchValue=''">取消</a-button>
       <a-button type="primary" style="float:right;margin-right: 40px" @click="$router.push({name: 'WordListEditor'})">创建词单</a-button>
-    </a-row>
+    </div>
     <a-row>
       <a-table
         :columns="columns"
         :dataSource="list"
-        style="margin: 10px 20px"
+        style="margin: 10px 20px;width: 100%"
         :pagination="false"
         :rowKey="res => res.name"
         :customRow="customRow"
@@ -117,7 +120,7 @@ export default {
       <a-table
         :columns="columns"
         :dataSource="searchList"
-        style="margin: 10px 20px"
+        style="margin: 10px 20px;width: 100%"
         :pagination="false"
         :rowKey="res => res.name"
         :customRow="customRow"

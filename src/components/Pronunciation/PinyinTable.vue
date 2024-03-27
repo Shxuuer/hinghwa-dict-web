@@ -2,13 +2,11 @@
   <a-row justify="center" type="flex">
     <a-col :span="18">
       <a-table :columns="columns" :data-source="pinyin">
-        <span slot="customTitle"> Name</span>
-        <span slot="action" slot-scope="text, record">
-      <audio
-        :src="'https://cos.edialect.top/pinyin/example/'+(record.pinyin || record.type)+'.mp3'"
-        controls
-      />
-    </span>
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'action'">
+            <audio :src="'https://cos.edialect.top/pinyin/example/'+(record.pinyin || record.type)+'.mp3'" controls/>
+          </template>
+        </template>
       </a-table>
     </a-col>
   </a-row>

@@ -6,36 +6,36 @@
         <h1 v-else>词条创建</h1>
       </template>
 
-      <a-form-model :labelCol="{span: 3}" :model="word" :wrapperCol="{span:16,offset:1}">
-        <a-form-model-item label="词条">
-          <a-input v-model="word.word" placeholder="填入词条标题"/>
-        </a-form-model-item>
-        <a-form-model-item label="拼音">
-          <a-input v-model="word.standard_pinyin" placeholder="词条的拼音写法（不用类化）"/>
-        </a-form-model-item>
-        <a-form-model-item label="IPA">
-          <a-input v-model="word.standard_ipa" placeholder="词条的IPA（实际发音），实在不会可以留空找管理员帮忙"/>
-        </a-form-model-item>
-        <a-form-model-item label="释义">
-          <DefinitionEdit v-model="word.definition"/>
-        </a-form-model-item>
-        <a-form-model-item label="普通话词汇">
-          <LineTags v-model="word.mandarin" tips="新词汇"></LineTags>
-        </a-form-model-item>
-        <a-form-model-item label="相关词条">
-          <SelectWord :default-value="related_words" v-model="word.related_words"/>
-        </a-form-model-item>
-        <a-form-model-item label="相关文章">
-          <SelectArticle v-model="word.related_articles" :default-value="related_articles"/>
-        </a-form-model-item>
-        <a-form-model-item label="附注">
-          <MarkdownEditor v-model="word.annotation"></MarkdownEditor>
-        </a-form-model-item>
-        <a-form-model-item label="理由说明">
-          <a-input v-if="id" v-model="reason" placeholder="[可选]说明更改了哪些点，为何修改有助于更好帮助管理员审核"/>
-          <a-input v-else v-model="reason" placeholder="[可选]说明有哪些看可能把握不准的地方，有助于更好帮助管理员审核"/>
-        </a-form-model-item>
-      </a-form-model>
+      <a-form :labelCol="{span: 3}" :model="word" :wrapperCol="{span:16,offset:1}">
+        <a-form-item label="词条">
+          <a-input v-model:value="word.word" placeholder="填入词条标题"/>
+        </a-form-item>
+        <a-form-item label="拼音">
+          <a-input v-model:value="word.standard_pinyin" placeholder="词条的拼音写法（不用类化）"/>
+        </a-form-item>
+        <a-form-item label="IPA">
+          <a-input v-model:value="word.standard_ipa" placeholder="词条的IPA（实际发音），实在不会可以留空找管理员帮忙"/>
+        </a-form-item>
+        <a-form-item label="释义">
+          <DefinitionEdit v-model:value="word.definition"/>
+        </a-form-item>
+        <a-form-item label="普通话词汇">
+          <LineTags v-model:value="word.mandarin" tips="新词汇"></LineTags>
+        </a-form-item>
+        <a-form-item label="相关词条">
+          <SelectWord :default-value="related_words" v-model:value="word.related_words"/>
+        </a-form-item>
+        <a-form-item label="相关文章">
+          <SelectArticle v-model:value="word.related_articles" :default-value="related_articles"/>
+        </a-form-item>
+        <a-form-item label="附注">
+<!--          <MarkdownEditor v-model:value="word.annotation"></MarkdownEditor>-->
+        </a-form-item>
+        <a-form-item label="理由说明">
+          <a-input v-if="id" v-model:value="reason" placeholder="[可选]说明更改了哪些点，为何修改有助于更好帮助管理员审核"/>
+          <a-input v-else v-model:value="reason" placeholder="[可选]说明有哪些看可能把握不准的地方，有助于更好帮助管理员审核"/>
+        </a-form-item>
+      </a-form>
       <a-button @click="submit">
         {{ id ? '提交更改' : '创建词条' }}
       </a-button>
@@ -44,12 +44,12 @@
 </template>
 
 <script>
-import DefinitionEdit from '../../components/Word/DefinitionEdit'
-import axios from 'axios'
-import MarkdownEditor from '../../components/Articles/MarkdownEditor'
-import LineTags from '../../components/Word/LineTags'
-import SelectWord from '../../components/Word/SelectWord'
-import SelectArticle from '../../components/Word/SelectArticle'
+import DefinitionEdit from '../../components/Word/DefinitionEdit.vue'
+import axios from '@/axios'
+import MarkdownEditor from '../../components/Articles/MarkdownEditor.vue'
+import LineTags from '../../components/Word/LineTags.vue'
+import SelectWord from '../../components/Word/SelectWord.vue'
+import SelectArticle from '../../components/Word/SelectArticle.vue'
 
 export default {
   name: 'WordEdit',

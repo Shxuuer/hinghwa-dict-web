@@ -33,12 +33,14 @@
 
           <a-form-item label="电话">
             <a-input v-model="user.telephone" :disabled="!editing" placeholder="输入你的电话号码">
-              <a-icon slot="prefix" type="phone"/>
+              <template v-slot:prefix>
+<a-icon  type="phone"/>
+</template>
             </a-input>
           </a-form-item>
 
           <a-form-item label="乡镇">
-            <AreaCascader :county.sync="user.county" :disabled="!editing" :town.sync="user.town"/>
+            <AreaCascader v-model:county="user.county" :disabled="!editing" v-model:town="user.town"/>
           </a-form-item>
 
           <a-form-item :wrapper-col="{ span: 24, offset: 5 }">
@@ -99,7 +101,8 @@
                 修改密码
                 <a-icon type="down"/>
               </a>
-              <a-form slot="content" :label-col="{span:7, offset: 1}">
+              <template v-slot:content>
+<a-form  :label-col="{span:7, offset: 1}">
                 <a-form-item :wrapper-col="{ span: 12, offset: 2 }" label="旧密码">
                   <a-input-password v-model="oldPassword"/>
                 </a-form-item>
@@ -119,6 +122,7 @@
                   </a-button>
                 </a-form-item>
               </a-form>
+</template>
             </a-popover>
           </a-form-item>
 
@@ -130,7 +134,8 @@
                 <a-icon type="down"/>
               </a>
 
-              <a-form slot="content" :label-col="{span:4}">
+              <template v-slot:content>
+<a-form  :label-col="{span:4}">
                 <a-form-item label="新邮箱" :wrapper-col="{ span: 16, offset: 2 }">
                   <a-input v-model="newEmail"/>
                 </a-form-item>
@@ -164,6 +169,7 @@
                   </a-button>
                 </a-form-item>
               </a-form>
+</template>
             </a-popover>
           </a-form-item>
 
@@ -177,7 +183,7 @@
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import AreaCascader
-from '../../components/User/AreaCascader'
+  from '../../components/User/AreaCascader'
 import { EmailReg } from '@/consts/reg-exp'
 import { changeEmailRequest, changePasswordRequest, deleteWechatRequest, updateUserRequest } from '@/services/users'
 import { checkImageBeforeUpload, sendCodeRequest, uploadFile } from '@/services/website'
@@ -188,8 +194,8 @@ export default {
   data () {
     return {
       moment, // 字符串转时间object时需要用到的变量
-      EmailReg: EmailReg, // 邮箱正则表达式
-      checkImageBeforeUpload: checkImageBeforeUpload, // 上传图片前的校验函数
+      EmailReg, // 邮箱正则表达式
+      checkImageBeforeUpload, // 上传图片前的校验函数
 
       // 用户的信息
       user: {

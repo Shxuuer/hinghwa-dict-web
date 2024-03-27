@@ -18,14 +18,6 @@ export default {
       ],
       cardKey: 'GoodsManage'
     }
-  },
-  async created () {
-    // 管理员身份验证
-    await this.$store.dispatch('userUpdate')
-    if (!this.$store.getters.user.is_admin) {
-      this.$message.error('仅管理员有权访问该模块！或请重新登录！')
-      await this.$router.push({ name: 'Home' })
-    }
   }
 }
 </script>

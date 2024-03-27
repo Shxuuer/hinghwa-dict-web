@@ -5,7 +5,9 @@
         <a-card-grid style="width:50%;text-align:center">
           <router-link :to="{name:'ArticleDetails',params:{id:item.article.id.toString()}}">
             <a-card :bordered="false">
-              <img slot="cover" :alt="item.article.title" :src="item.article.cover" style="width:100%;height:150px">
+              <template v-slot:cover>
+<img  :alt="item.article.title" :src="item.article.cover" style="width:100%;height:150px">
+</template>
               <a-card-meta :title="item.article.title">
               </a-card-meta>
             </a-card>

@@ -1,66 +1,35 @@
 {
-  "name": "hinghwa-dict-web",
-  "version": "0.1.1",
+  "name": "hingwa-v3",
+  "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "build-dev": "vue-cli-service build --mode=development"
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview",
+    "fix": "eslint src/**/*.*  --fix"
   },
   "dependencies": {
-    "@ant-design/icons-vue": "^4.0.6",
-    "ant-design-vue": "^1.7.7",
-    "axios": "^0.21.2",
-    "crypto-js": "^4.1.1",
-    "mavon-editor": "^2",
-    "moment": "^2.29.2",
+    "@ant-design/icons-vue": "^7.0.1",
+    "ant-design-vue": "^4.1.2",
+    "axios": "^1.6.7",
+    "crypto-js": "^4.2.0",
+    "markdown-it": "^14.1.0",
+    "mavon-editor": "^2.10.4",
+    "moment": "^2.30.1",
     "qrcodejs2": "^0.0.2",
-    "vue": "^2.6.11",
-    "vue-router": "^3.2.0",
-    "vuex": "^3.4.0",
-    "worker-loader": "^2.0.0"
+    "vue": "^3.4.15",
+    "vue-router": "^4.3.0",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^5.0.8",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "^5.0.8",
-    "@vue/eslint-config-standard": "^5.1.2",
-    "babel-eslint": "^10.1.0",
-    "core-js": "^3.30.2",
-    "enc": "^0.4.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "eslint-plugin-vue": "^6.2.2",
-    "vconsole": "^3.3.4",
-    "vue-template-compiler": "^2.6.11"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/standard"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
-  },
-  "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "@vitejs/plugin-vue": "^5.0.3",
+    "eslint": "^8.0.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-vue": "^9.22.0",
+    "vite": "^5.0.11"
+  }
 }

@@ -2,18 +2,18 @@
   <div>
     <!--新提交的评论-->
     <a-comment v-show="replyTo===parent" v-if="user.id !== 0">
-      <template v-slot:avatar>
+      <template #avatar>
         <a-avatar
           v-if="$store.getters.loginStatus"
           :alt="user.nickname"
           :src="user.avatar"
         />
       </template>
-      <template v-slot:content>
+      <template #content>
         <a-form-item>
           <a-textarea
             v-if="$store.getters.loginStatus"
-            v-model="newCommentValue" :rows="4"/>
+            v-model:value="newCommentValue" :rows="4"/>
         </a-form-item>
         <a-form-item>
           <a-button
@@ -38,7 +38,7 @@
       :pagination="{pageSize: pageSize,hideOnSinglePage:true}"
       item-layout="horizontal"
     >
-      <template v-slot:renderItem="item">
+      <template v-slot:renderItem="{item}">
         <a-list-item>
           <a-comment
             :author="item.user.nickname"
@@ -50,7 +50,7 @@
               </router-link>
             </template>
 
-            <template slot="actions">
+            <template #actions>
               <span
                 v-if="item.user.id===user.id"
                 :disabled="btnCommentSubmitting"
@@ -71,9 +71,8 @@
                 取消回复
               </span>
             </template>
-            <comment-list
-              :id="id" :comments="comments" :pageSize="3" :parent="item.id"/>
-          </a-comment>
+            <comment-list :id="id" :comments="comments" :pageSize="3" :parent="item.id"/>
+            </a-comment>
         </a-list-item>
       </template>
     </a-list>
@@ -81,7 +80,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/axios'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -120,7 +119,7 @@ export default {
       this.btnCommentSubmitting = true
       const data = {
         content: this.newCommentValue,
-        parent: parent
+        parent
       }
       axios.post('/articles/' + this.id + '/comments', data).then(async () => {
         await this.$store.commit('updateComments', this.id)
@@ -141,7 +140,7 @@ export default {
       this.commentsLoading = true
       axios.delete('/articles/' + this.id + '/comments', {
         data: {
-          id: id
+          id
         }
       }).then(async () => {
         this.$message.success('成功删除评论')

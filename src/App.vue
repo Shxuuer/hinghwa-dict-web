@@ -2,7 +2,7 @@
 
   <a-layout>
     <a-layout-header style="background: white;position:fixed;width: 100%;z-index: 3">
-      <myHeader/>
+      <LayoutHeader/>
     </a-layout-header>
     <a-layout-content style="margin-top: 74px">
       <div class="body">
@@ -11,29 +11,23 @@
       <MusicAffix/>
     </a-layout-content>
     <a-layout-footer style="background: rgb(46, 46, 46)">
-      <myFooter/>
+      <LayoutFooter/>
     </a-layout-footer>
   </a-layout>
 
 </template>
 
 <script>
-import myHeader from './components/HeaderAndFooter/Header.vue'
-import myFooter from './components/HeaderAndFooter/Footer.vue'
+import LayoutHeader from './components/HeaderAndFooter/LayoutHeader.vue'
+import LayoutFooter from './components/HeaderAndFooter/LayoutFooter.vue'
 import MusicAffix from './components/Music/MusicAffix.vue'
-import { refreshToken } from '@/services/login'
 import pc2mob from '@/router/pc2mob'
 
 export default {
   components: {
-    myHeader,
-    myFooter,
+    LayoutHeader,
+    LayoutFooter,
     MusicAffix
-  },
-  async beforeCreate () {
-    if (window.localStorage.getItem('token')) {
-      await refreshToken()
-    }
   },
   computed: {
     routeName () {

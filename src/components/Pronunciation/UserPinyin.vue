@@ -2,27 +2,35 @@
   <a-row justify="center" type="flex">
     <a-col :span="22">
       <a-table
-        :columns="columns"
-        :data-source="pronunciation"
-        :pagination="pagination"
+          :columns="columns"
+          :data-source="pronunciation"
+          :pagination="pagination"
       >
-         <span slot="status" slot-scope="text, record">
-          <a-badge v-if="!record.pronunciation.visibility" color="red" status="warning" title="暂未通过审核"/>
-          <a-badge v-else status="success" title="已经通过审核"/>
-        </span>
-        <span slot="word" slot-scope="text, record">
-          <router-link :to="{name:'WordDetails',params:{id:record.pronunciation.word_id.toString()}}">
-            {{ record.pronunciation.word_word }}
-          </router-link>
-        </span>
-        <span slot="customTitle"> Name</span>
-        <span slot="action" slot-scope="text, record">
-          <audio
-            :src="record.pronunciation.source"
-            controls
-            style="width: 128px"
-          />
-        </span>
+        <template v-slot:status="text, record">
+          <span>
+            <a-badge v-if="!record.pronunciation.visibility" color="red" status="warning" title="暂未通过审核"/>
+            <a-badge v-else status="success" title="已经通过审核"/>
+            </span>
+        </template>
+        <template v-slot:word="text, record">
+          <span>
+            <router-link :to="{name:'WordDetails',params:{id:record.pronunciation.word_id.toString()}}">
+              {{ record.pronunciation.word_word }}
+            </router-link>
+          </span>
+        </template>
+        <template v-slot:customTitle>
+          <span> Name</span>
+        </template>
+        <template v-slot:action="text, record">
+          <span>
+            <audio
+                :src="record.pronunciation.source"
+                controls
+                style="width: 128px"
+            />
+          </span>
+        </template>
       </a-table>
     </a-col>
   </a-row>
@@ -30,7 +38,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/axios'
 
 export default {
   name: 'UserPinyin',
@@ -38,28 +46,7 @@ export default {
   data () {
     return {
       total: 0,
-      pronunciation: [
-        // {
-        //   key: 1,
-        //   pronunciation: {
-        //     id: 19,
-        //     word_id: 16,
-        //     word_word: '阿尾哥',
-        //     source: '',
-        //     ipa: 'ap1 puai13 ko533',
-        //     pinyin: 'a1 bue3 go1',
-        //     contributor: 5,
-        //     county: '涵江',
-        //     town: '国欢',
-        //     visibility: true
-        //   },
-        //   contributor: {
-        //     id: 5,
-        //     nickname: '这只是一个测试账号呢',
-        //     avatar: ''
-        //   }
-        // }
-      ],
+      pronunciation: [],
       columns: [
         {
           title: '状态',
@@ -111,7 +98,7 @@ export default {
       return {
         onChange: async page => {
           await this.getCurrentPage(page)
-          axios.get('/pronunciation', {
+          await axios.get('/pronunciation', {
             params: {
               pageSize: this.pagination.pageSize,
               page: page + 1,
@@ -129,7 +116,7 @@ export default {
   },
   async created () {
     await this.getCurrentPage(0)
-    axios.get('/record', {
+    await axios.get('/record', {
       params: {
         pageSize: this.pagination.pageSize,
         page: 1

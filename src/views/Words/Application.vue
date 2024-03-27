@@ -1,6 +1,7 @@
 <template>
   <a-card>
-    <div slot="title">
+    <template v-slot:title>
+<div >
       <div v-if="application.word">
         <h2>审核词条变更申请（测试中）</h2>
         <p>显示内容（不可编辑内容）为词条当前已公开的状态</p>
@@ -11,6 +12,7 @@
         <h2>审核词条创建申请（测试中）</h2>
       </div>
     </div>
+</template>
     <a-spin :delay="500" :spinning="spinning">
       <a-form-model :labelCol="{span: 3}" :model="application.content" :wrapperCol="{span:16,offset:1}">
         <a-form-model-item label="词条">
@@ -161,7 +163,7 @@ export default {
       try {
         await axios.put(`/words/applications/${this.id}`, {
           reason: this.reason,
-          result: result
+          result
         }).then(res => {
           this.application.word = res.data.word
         })

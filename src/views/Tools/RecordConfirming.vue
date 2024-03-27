@@ -1,6 +1,6 @@
 <template>
   <a-card>
-    <template slot="title">
+    <template v-slot:title>
       <h2>录音审核</h2>
       <div>
         使用帮助：<br>
@@ -27,14 +27,7 @@ import Record from '../../components/Admin/Record'
 
 export default {
   name: 'RecordConfirming',
-  components: { Record },
-  async created () {
-    await this.$store.dispatch('userUpdate')
-    if (!this.$store.getters.user.is_admin) {
-      this.$message.error('仅管理员有权访问该模块！或请重新登录！')
-      await this.$router.push({ name: 'Tools' })
-    }
-  }
+  components: { Record }
 }
 </script>
 

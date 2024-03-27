@@ -4,13 +4,13 @@
     :loading="{spinning: loading, delay: 500}"
     :pagination="pagination"
   >
-    <template v-slot:renderItem="item">
+    <template v-slot:renderItem="{item}">
       <a-card
         :hoverable="true"
         style="width: 100%;"
       >
         <a-card-meta :description="item.word.definition.slice(0,100)">
-          <template v-slot:title>
+          <template #title>
             <span style="font-size: 150%">
                <router-link
                  :to="{name:'WordDetails',params:{id:item.word.id.toString()}}"
@@ -36,7 +36,7 @@
           <a-button type="link">
             <router-link :to="{name:'WordDetails',params:{id:item.word.id.toString()}}">
               更多
-              <a-icon type="double-right"/>
+              <DoubleRightOutlined />
             </router-link>
           </a-button>
         </div>
@@ -46,12 +46,14 @@
   </a-list>
 </template>
 <script>
-import axios from 'axios'
-import PlaySoundButton from './PlaySoundButton'
+
+import axios from '@/axios'
+import PlaySoundButton from './PlaySoundButton.vue'
+import { DoubleRightOutlined } from '@ant-design/icons-vue'
 
 export default {
   name: 'WordList',
-  components: { PlaySoundButton },
+  components: { PlaySoundButton, DoubleRightOutlined },
   data () {
     return {
       listSource: null,

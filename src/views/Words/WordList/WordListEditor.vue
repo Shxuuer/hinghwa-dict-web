@@ -1,13 +1,14 @@
 <script>
-import axios from 'axios'
+import axios from '@/axios'
 import SelectWord from '@/components/Word/SelectWord.vue'
+import { message } from 'ant-design-vue'
 
 export default {
   name: 'WordListEditor',
   components: { SelectWord },
   async beforeCreate () {
     if (this.$route.query.id) {
-      await this.$axios.get('/lists/' + this.$route.query.id).then(res => {
+      await axios.get('/lists/' + this.$route.query.id).then(res => {
         this.listInfo.name = res.data.name
         this.listInfo.description = res.data.description
         const tempList = []
@@ -19,7 +20,7 @@ export default {
         })
         this.defaultValue = tempList
       }).catch(() => {
-        this.$message.error('拉取词单信息失败')
+        message.error('拉取词单信息失败')
       })
     }
   },
@@ -37,18 +38,19 @@ export default {
   methods: {
     async submitList () {
       if (this.listInfo.name === '' || this.listInfo.description === '') {
-        this.$message.error('信息不足')
+        message.error('信息不足')
         return
       }
+      console.log(this.existWords)
       await this.existWords.forEach(item => {
-        this.listInfo.words.push(item.key)
+        this.listInfo.words.push(item.value)
       })
       function afterSubmit (that, prom) {
         prom.then(() => {
-          that.$message.success('提交成功')
+          message.success('提交成功')
           that.$router.push({ name: 'WordList' })
         }).catch(() => {
-          that.$message.error('提交失败')
+          message.error('提交失败')
         })
       }
       if (this.$route.query.id) {
@@ -67,14 +69,14 @@ export default {
                    @back="$router.push({name: 'WordList'})"/>
     <a-form :label-col="{span: 2}" :wrapper-col="{span: 22}" style="margin-top: 20px">
       <a-form-item label="词单名称">
-        <a-input v-model="listInfo.name" style="width: 250px" placeholder="词单名称"/>
+        <a-input v-model:value="listInfo.name" style="width: 250px" placeholder="词单名称"/>
       </a-form-item>
       <a-form-item label="词单描述">
-        <a-textarea v-model="listInfo.description" style="width: 600px" :auto-size="{ minRows: 9, maxRows: 9 }"
+        <a-textarea v-model:value="listInfo.description" style="width: 600px" :auto-size="{ minRows: 9, maxRows: 9 }"
                     placeholder="词单描述"/>
       </a-form-item>
       <a-form-item label="词单词汇">
-        <SelectWord style="width: 600px" v-model="existWords" :default-value="defaultValue"/>
+        <SelectWord style="width: 600px" v-model:value="existWords" :default-value="defaultValue"/>
       </a-form-item>
       <a-form-item>
         <a-button type="primary" style="margin-left: 40px" @click="submitList">提交</a-button>

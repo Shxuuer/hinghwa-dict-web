@@ -2,24 +2,25 @@
   <a-card title="声韵调选字">
 
     <!--   搜索按钮  -->
-    <a-popconfirm
-      slot="extra"
-      :title="'这样搜索共有'+result.length+'个结果，若要显示可能需要一定的时间，请确认是否继续？'"
-      :visible="visible"
-      cancel-text="取消"
-      ok-text="继续"
-      @cancel="visible=false;loading = false"
-      @confirm="confirmShowing"
-    >
+    <template v-slot:extra>
+  <a-popconfirm
+        :title="'这样搜索共有'+result.length+'个结果，若要显示可能需要一定的时间，请确认是否继续？'"
+        :open="visible"
+        cancel-text="取消"
+        ok-text="继续"
+        @cancel="visible=false;loading = false"
+        @confirm="confirmShowing"
+      >
       <a-button
         :loading="btnLoading"
         style="margin-left:32px"
         type="primary"
-        v-on:click="getCharacters()"
+        @click="getCharacters()"
       >
         按条件检索
       </a-button>
     </a-popconfirm>
+</template>
 
     <h2>依次选择声母、韵母、声调，即可搜索所有符合要求的汉字</h2>
 
@@ -27,7 +28,7 @@
       <a-col span="8">
         <!--   筛选声母  -->
         <a-select
-          v-model="conditions.shengmu"
+          v-model:value="conditions.shengmu"
           :filter-option="filterOption"
           :showSearch="true"
           option-filter-prop="children"
@@ -42,7 +43,7 @@
       <a-col span="8">
         <!--   筛选韵母  -->
         <a-cascader
-          v-model="conditions.yunmu"
+          v-model:value="conditions.yunmu"
           :display-render="displayRender"
           :options="yunmu"
           :showSearch="true"
@@ -53,7 +54,7 @@
       <a-col span="8">
         <!--   筛选声调  -->
         <a-select
-          v-model="conditions.shengdiao"
+          v-model:value="conditions.shengdiao"
           :filter-option="filterOption"
           :showSearch="true"
           option-filter-prop="children"
@@ -117,8 +118,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import PlaySoundButton from '../../components/Tools/PlaySoundButton'
+import axios from '@/axios'
+import PlaySoundButton from '../../components/Tools/PlaySoundButton.vue'
 
 export default {
   name: 'Conditions',

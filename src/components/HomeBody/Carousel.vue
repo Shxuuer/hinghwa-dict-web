@@ -10,20 +10,24 @@
       arrows
       @click="console.log('carousel')"
     >
-      <div
-        slot="prevArrow"
+      <template v-slot:prevArrow>
+<div
+
         class="custom-slick-arrow"
         style="left: 10px;"
       >
         <a-icon type="left-circle"/>
       </div>
+</template>
 
-      <div
-        slot="nextArrow"
+      <template v-slot:nextArrow>
+<div
+
         class="custom-slick-arrow"
         style="right: 10px">
         <a-icon type="right-circle"/>
       </div>
+</template>
 
       <!--BUG:触屏下click无反应-->
       <router-link

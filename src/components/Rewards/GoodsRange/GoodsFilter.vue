@@ -1,4 +1,6 @@
 <script>
+import { message } from 'ant-design-vue'
+
 export default {
   name: 'GoodsFilter',
   data () {
@@ -19,7 +21,7 @@ export default {
         if (this.visible) return
         if (this.minPoints && this.maxPoints) {
           if (this.filter.minPoints > this.filter.maxPoints) {
-            this.$message.error('最低积分不能大于最高积分')
+            message.error('最低积分不能大于最高积分')
             this.visible = true
             return
           }
@@ -41,18 +43,18 @@ export default {
     <template #content>
       <div style="display: flex;flex-direction: column">
         <div style="display: flex;flex-direction: row;align-items: center">
-          <a-checkbox style="margin-right: 10px" v-model="minPoints"/>
+          <a-checkbox style="margin-right: 10px" v-model:checked="minPoints"/>
           <span style="margin-right: 10px">最低积分</span>
-          <a-input-number v-model="filter.minPoints" :min="0" style="width: 100px" :disabled="!minPoints"/>
+          <a-input-number v-model:value="filter.minPoints" :min="0" style="width: 100px" :disabled="!minPoints"/>
         </div>
         <div style="display: flex;flex-direction: row;align-items: center;margin-top: 10px">
-          <a-checkbox style="margin-right: 10px" v-model="maxPoints"/>
+          <a-checkbox style="margin-right: 10px" v-model:checked="maxPoints"/>
           <span style="margin-right: 10px">最高积分</span>
-          <a-input-number v-model="filter.maxPoints" :min="0" style="width: 100px" :disabled="!maxPoints"/>
+          <a-input-number v-model:value="filter.maxPoints" :min="0" style="width: 100px" :disabled="!maxPoints"/>
         </div>
         <div style="display: flex;flex-direction: row;align-items: center;margin-top: 10px">
           <span style="margin-right: 10px">库存</span>
-          <a-radio-group v-model="filter.stock">
+          <a-radio-group v-model:value="filter.stock">
             <a-radio-button :value="-1">不限</a-radio-button>
             <a-radio-button :value="0">有货</a-radio-button>
             <a-radio-button :value="1">无货</a-radio-button>

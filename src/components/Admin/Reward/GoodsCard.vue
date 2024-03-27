@@ -26,7 +26,7 @@ export default {
   <div>
     <a-card :title="goods.name" hoverable>
       <template #extra>
-        <a-button type="danger" @click="handleDelBut" style="margin-right: 15px">删除</a-button>
+        <a-button type="ghost" @click="handleDelBut" style="margin-right: 15px">删除</a-button>
         <a-button type="primary" @click="handleEditBut">编辑</a-button>
       </template>
       <a-descriptions bordered size="small">

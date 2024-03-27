@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import PlaySoundButton from './PlaySoundButton'
+import axios from '@/axios'
+import PlaySoundButton from './PlaySoundButton.vue'
 
 export default {
   name: 'PinyinList',

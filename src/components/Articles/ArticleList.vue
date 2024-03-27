@@ -6,9 +6,9 @@
       :pagination="pagination"
       item-layout="vertical"
     >
-      <template v-slot:renderItem="item">
+      <template #renderItem="{item}">
         <a-list-item>
-          <template v-slot:extra>
+          <template #extra>
             <img
               :src="item.article.cover"
               alt="文章封面"
@@ -16,7 +16,7 @@
             />
           </template>
           <a-list-item-meta :description="item.article.description">
-            <template v-slot:title>
+            <template #title>
               <h2>
                 <router-link :to="{name:'ArticleDetails',params:{id:item.article.id.toString()}}">
                   {{ item.article.title }}
@@ -31,7 +31,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from '@/axios'
 
 export default {
   name: 'ArticleList',

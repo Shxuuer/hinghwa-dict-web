@@ -1,11 +1,10 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import axios from 'axios'
+import axios from '@/axios'
 import moment from 'moment'
+import { createStore } from 'vuex'
+import { message } from 'ant-design-vue'
 
 moment.locale('zh-cn')
 
-Vue.use(Vuex)
 const defaultUser = {
   id: 0,
   username: 'username',
@@ -15,9 +14,8 @@ const defaultUser = {
   points_now: 0,
   points_sum: 0
 }
-export default new Vuex.Store({
+export default createStore({
   state: {
-    tab: [],
     tab1: [],
     drawerVisibility: false,
     drawerLoading: false,
@@ -41,7 +39,6 @@ export default new Vuex.Store({
       word_uploaded: 0,
       listened: 0
     },
-    music: 8,
     replyTo: 0,
     commentsLoading: false,
     comments: [
@@ -69,9 +66,6 @@ export default new Vuex.Store({
     },
 
     // getter区
-    tab (state) {
-      return state.tab
-    },
     tab1 (state) {
       return state.tab1
     },
@@ -89,9 +83,6 @@ export default new Vuex.Store({
     },
     like_articles (state) {
       return state.like_articles
-    },
-    music (state) {
-      return state.music
     },
     replyTo (state) {
       return state.replyTo
@@ -119,14 +110,6 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    tab (state, value) {
-      const list = ['Home', 'Articles', 'Tools', 'Pinyin', 'Dictionary', 'Rewards']
-      if (list.indexOf(value[0]) >= 0) {
-        state.tab = Object.assign([], value)
-      } else {
-        state.tab = []
-      }
-    },
     tab1 (state, value) {
       const list = ['ptxTranslation', 'xtpTranslation']
       if (list.indexOf(value[0]) >= 0) {
@@ -153,9 +136,6 @@ export default new Vuex.Store({
       state.drawerVisibility = false
     },
 
-    changeMusic (state, id) {
-      state.music = id
-    },
     changeReplyTo (state, value) {
       state.replyTo = value
     },
@@ -177,15 +157,24 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async userLogin ({
-      state,
-      dispatch
-    }, id) {
+    async loginByToken ({ state, dispatch }) {
+      if (localStorage.getItem('token')) {
+        await axios.put('/login', {}).then(async res => {
+          localStorage.setItem('token', res.data.token)
+          await dispatch('userLogin', res.data.id)
+        }).catch(() => {
+          message.error('登录已过期，请重新登录')
+        })
+      }
+    },
+
+    async userLogin ({ state, dispatch }, id) {
       if (state.user.id.toString() === id.toString()) return
       state.user.id = Number(id)
       localStorage.setItem('id', id)
       return dispatch('userUpdate')
     },
+
     async userUpdate ({ state }) {
       state.drawerLoading = true
       return axios.get('/users/' + state.user.id).then(async (res) => {

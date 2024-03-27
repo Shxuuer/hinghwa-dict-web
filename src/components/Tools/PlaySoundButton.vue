@@ -2,33 +2,48 @@
   <span>
     <a-button
       v-if="source&&source!==url&&pinyin_url"
-      icon="sound"
       size="small"
       type="link"
       @click="playSound(pinyin_url,'拼音')"
-    />
+    >
+      <template #icon>
+        <NotificationOutlined />
+      </template>
+    </a-button>
+
     <a-button
       v-if="source&&source!==url&&ipa_url"
-      icon="sound"
       size="small"
       type="link"
       @click="playSound(ipa_url,'IPA')"
-    />
+    >
+      <template #icon>
+        <NotificationOutlined />
+      </template>
+    </a-button>
+
     <a-button
       v-if="source===url||!source"
       :disabled="!source"
-      icon="sound"
       size="small"
       type="link"
       @click="playSound(source,'url')"
-    />
+    >
+      <template #icon>
+        <NotificationOutlined />
+      </template>
+    </a-button>
+
   </span>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/axios'
+import { NotificationOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 
 export default {
+  components: { NotificationOutlined },
   props:
     {
       url: {
@@ -53,9 +68,9 @@ export default {
   },
   computed: {
     source () {
-      if (this.url && this.url !== 'null') return this.url
-      if (this.ipa_url) return this.ipa_url
-      if (this.pinyin_url) return this.pinyin_url
+      if (this.url !== '' && this.url !== 'null') return this.url
+      if (this.ipa_url !== '') return this.ipa_url
+      if (this.pinyin_url !== '') return this.pinyin_url
       return ''
     }
   },
@@ -66,14 +81,14 @@ export default {
       axios.get('pronunciation/combine', { params: { ipas: this.ipa } }).then(res => {
         this.ipa_url = res.data.url
       }).catch(() => {
-        this.$message.destroy()
+        message.destroy()
       })
     }
     if (this.pinyin) {
       axios.get('pronunciation/combine', { params: { pinyins: this.pinyin } }).then(res => {
         this.pinyin_url = res.data.url
       }).catch(() => {
-        this.$message.destroy()
+        message.destroy()
       })
     }
   },
@@ -84,7 +99,7 @@ export default {
         axios.get('pronunciation/combine', { params: { pinyins: this.pinyin } }).then(res => {
           this.pinyin_url = res.data.url
         }).catch(() => {
-          this.$message.destroy()
+          message.destroy()
         })
       }
     },
@@ -94,14 +109,14 @@ export default {
         axios.get('pronunciation/combine', { params: { ipas: this.ipa } }).then(res => {
           this.ipa_url = res.data.url
         }).catch(() => {
-          this.$message.destroy()
+          message.destroy()
         })
       }
     }
   },
   methods: {
     playSound (url, word) {
-      if (url !== this.url) this.$message.warning(`该语音由程序根据${word}生成，仅供参考！（可能存在错误）`)
+      if (url !== this.url) message.warning(`该语音由程序根据${word}生成，仅供参考！（可能存在错误）`)
       new Audio(url).play()
     }
   }

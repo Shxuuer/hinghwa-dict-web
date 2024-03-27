@@ -1,30 +1,21 @@
 <template>
-  <a-card
-  >
-    <template slot="title">
+  <a-card>
+    <template #title>
       <h2>快速录音</h2>
       <h5>
-        为批量录音加速再加速（此功能需要先行登录）
-        <br>
-        已经从用户资料中获取默认的县区和乡镇信息，实际情况请修改在文本框中~
-        <br>
-        发音人乡镇
-        <AreaCascader
-          :county.sync="form.county"
-          :town.sync="form.town"
-          style="width: 200px;margin:5px"
-        />
+        为批量录音加速再加速（此功能需要先行登录） <br> 已经从用户资料中获取默认的县区和乡镇信息，实际情况请修改在文本框中~ <br> 发音人乡镇
+        <AreaCascader v-model:county="form.county" v-model:town="form.town" style="width: 200px;margin:5px" />
       </h5>
         <a-row>
           <router-link :to="{name:'RankList'}">
-            <a-button icon="trophy" size="small">录音排行榜</a-button>
+            <a-button size="small"><TrophyOutlined />录音排行榜</a-button>
           </router-link>
         </a-row>
     </template>
     <recording
       :form="form"
       :onCancel="()=>{this.toRecord=-1}"
-      :visible="toRecord!==-1">
+      :open="toRecord!==-1">
     </recording>
     <a-row justify="center" type="flex">
       <a-col :span="22">
@@ -34,19 +25,17 @@
           :loading="{spinning: tableLoading, delay: 500}"
           :pagination="pagination"
         >
-          <span slot="index" slot-scope="record">
-            <router-link :to="{name:'WordDetails',params:{id:record.word}}">
-              {{ record.word }}
-            </router-link>
-          </span>
-          <span slot="customTitle"> Name</span>
-          <span slot="action" slot-scope="record">
-         <a-button
-           icon="audio"
-           shape="circle"
-           @click="toRecord=record.key"
-         />
-    </span>
+          <template #bodyCell="{ column, record }">
+            <span v-if="column.key === 'count'">{{ record.count }}</span>
+            <span v-else-if="column.key === 'action'">
+             <a-button shape="circle" @click="toRecord=record.key" >
+               <template #icon>
+                 <AudioOutlined />
+               </template>
+             </a-button>
+            </span>
+            <span v-else>{{ record[column.key] }}</span>
+          </template>
         </a-table>
       </a-col>
     </a-row>
@@ -55,29 +44,22 @@
 
 <script>
 
-import axios from 'axios'
+import axios from '@/axios'
 import Recording from '../../components/Pronunciation/Recording.vue'
-import AreaCascader from '../../components/User/AreaCascader'
+import AreaCascader from '../../components/User/AreaCascader.vue'
+import { TrophyOutlined, AudioOutlined } from '@ant-design/icons-vue'
 
 export default {
   name: 'QuickRecording',
   components: {
     AreaCascader,
-    Recording
+    AudioOutlined,
+    Recording,
+    TrophyOutlined
   },
   data () {
     return {
-      recordList: [
-        // {
-        //   word: 0,
-        //   item: 'item',
-        //   pinyin: 'pinyin',
-        //   ipa: 'ipa',
-        //   definition: 'definition',
-        //   count: 0,
-        //   key: 0
-        // }
-      ],
+      recordList: [],
       toRecord: -1,
       total: 6000,
       defaultCurrent: Math.ceil(Math.random() * 300),
@@ -143,7 +125,7 @@ export default {
       return {
         onChange: async page => {
           await this.getCurrentPage(page)
-          axios.get('/record', {
+          await axios.get('/record', {
             params: {
               pageSize: this.pagination.pageSize,
               page: page + 1
@@ -181,8 +163,7 @@ export default {
       await axios.get('/record', {
         params: {
           pageSize: this.pagination.pageSize,
-          page: page
-          // TODO: keyword: this.searchText
+          page
         },
         cache: true
       }).then(res => {

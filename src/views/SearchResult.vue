@@ -5,10 +5,9 @@
     style="width: 90%"
   >
     <a-card>
-      <template slot="title">
+      <template v-slot:title>
         <a-input-search
-          v-model="searchContent"
-          enter-button
+          v-model:value="searchContent"
           placeholder="请输入搜索内容"
           size="large"
           @search="search(searchContent)"
@@ -52,10 +51,10 @@
 </template>
 
 <script>
-import PinyinList from '../components/Tools/PinyinList'
-import WordList from '../components/Tools/WordList'
-import ArticleList from '../components/Articles/ArticleList'
-import axios from 'axios'
+import PinyinList from '../components/Tools/PinyinList.vue'
+import WordList from '../components/Tools/WordList.vue'
+import ArticleList from '../components/Articles/ArticleList.vue'
+import axios from '@/axios'
 
 export default {
   name: 'SearchResult',

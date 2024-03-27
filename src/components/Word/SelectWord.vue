@@ -1,6 +1,6 @@
 <template>
   <a-select
-    v-model="words"
+    v-model:value="words"
     :filter-option="false"
     :labelInValue="true"
     :maxTagTextLength="30"
@@ -12,7 +12,9 @@
     style="width: 100%"
     @search="handleWordSearch"
   >
-    <a-spin v-if="fetching" slot="notFoundContent" size="small"/>
+    <template v-slot:notFoundContent>
+      <a-spin v-if="fetching"  size="small"/>
+    </template>
     <a-select-option
       v-for="(item,index) in options_word"
       :key="index"
@@ -25,11 +27,12 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/axios'
 
 export default {
   name: 'SelectWord',
   props: ['defaultValue', 'value'],
+  emits: ['update:value'],
   data () {
     return {
       options_word: [],
@@ -45,7 +48,7 @@ export default {
       },
       set (value) {
         this.words_ = value
-        this.$emit('input', value)
+        this.$emit('update:value', value)
       }
     }
   },

@@ -49,7 +49,7 @@
 
 <script>
 
-import { getQuiz, getRandomQuiz } from '@/services/quiz'
+import axios from '@/axios/index.js'
 
 export default {
   name: 'QuizDetails',
@@ -83,8 +83,8 @@ export default {
      *获取测试题
      **/
     async getQuiz () {
-      await getQuiz(this.id).then(res => {
-        this.quiz = res.quiz
+      await axios.get(`/quizzes/${this.id}`).then(res => {
+        this.quiz = res.data.quiz
       })
     },
     answerAgain () {
@@ -111,8 +111,8 @@ export default {
       this.errorIndex = ''
       this.correctIndex = ''
       this.isShow = false
-      await getRandomQuiz().then(res => {
-        this.quiz = res.quiz
+      await axios.get('/quizzes/random').then(res => {
+        this.quiz = res.data.quiz
         this.$router.replace({
           path: '/PuxianExam/' + this.quiz.id
         })

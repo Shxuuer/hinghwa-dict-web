@@ -31,7 +31,4 @@ export default {
 </template>
 
 <style scoped>
-.buttons{
-  margin-right: 10px;
-}
 </style>

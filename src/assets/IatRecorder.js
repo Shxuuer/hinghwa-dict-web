@@ -1,4 +1,3 @@
-
 import CryptoJS from 'crypto-js'
 import Worker from './transcode.worker.js'
 const APPID = 'c4045cad'
@@ -6,24 +5,24 @@ const API_SECRET = 'YmFmY2Q3ZGNlODNmMmY5ZmJlNmNmMzRl'
 const API_KEY = '6bf97b8af37798841d2c609963f4e151'
 const transWorker = new Worker()
 console.log(transWorker)
-var startTime = ''
-var endTime = ''
+let startTime = ''
+let endTime = ''
 
 function getWebSocketUrl () {
   return new Promise((resolve, reject) => {
     // 请求地址根据语种不同变化
-    var url = 'wss://iat-api.xfyun.cn/v2/iat'
-    var host = 'iat-api.xfyun.cn'
-    var apiKey = API_KEY
-    var apiSecret = API_SECRET
-    var date = new Date().toGMTString()
-    var algorithm = 'hmac-sha256'
-    var headers = 'host date request-line'
-    var signatureOrigin = `host: ${host}\ndate: ${date}\nGET /v2/iat HTTP/1.1`
-    var signatureSha = CryptoJS.HmacSHA256(signatureOrigin, apiSecret)
-    var signature = CryptoJS.enc.Base64.stringify(signatureSha)
-    var authorizationOrigin = `api_key="${apiKey}", algorithm="${algorithm}", headers="${headers}", signature="${signature}"`
-    var authorization = btoa(authorizationOrigin)
+    let url = 'wss://iat-api.xfyun.cn/v2/iat'
+    const host = 'iat-api.xfyun.cn'
+    const apiKey = API_KEY
+    const apiSecret = API_SECRET
+    const date = new Date().toGMTString()
+    const algorithm = 'hmac-sha256'
+    const headers = 'host date request-line'
+    const signatureOrigin = `host: ${host}\ndate: ${date}\nGET /v2/iat HTTP/1.1`
+    const signatureSha = CryptoJS.HmacSHA256(signatureOrigin, apiSecret)
+    const signature = CryptoJS.enc.Base64.stringify(signatureSha)
+    const authorizationOrigin = `api_key="${apiKey}", algorithm="${algorithm}", headers="${headers}", signature="${signature}"`
+    const authorization = btoa(authorizationOrigin)
     url = `${url}?authorization=${authorization}&date=${date}&host=${host}`
     resolve(url)
   })
@@ -195,7 +194,7 @@ const IatRecorder = class {
   }
 
   // 暂停录音
-  userAgen;
+  userAgen
   recorderStop () {
     // safari下suspend后再次resume录音内容将是空白，设置safari下不做suspend
     if (!(/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgen))) {
@@ -211,10 +210,10 @@ const IatRecorder = class {
 
   // 对处理后的音频数据进行base64编码，
   toBase64 (buffer) {
-    var binary = ''
-    var bytes = new Uint8Array(buffer)
-    var len = bytes.byteLength
-    for (var i = 0; i < len; i++) {
+    let binary = ''
+    const bytes = new Uint8Array(buffer)
+    const len = bytes.byteLength
+    for (let i = 0; i < len; i++) {
       binary += String.fromCharCode(bytes[i])
     }
     return window.btoa(binary)
@@ -226,7 +225,7 @@ const IatRecorder = class {
       return
     }
     let audioData = this.audioData.splice(0, 1280)
-    var params = {
+    const params = {
       common: {
         app_id: this.appId
       },

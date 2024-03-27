@@ -1,6 +1,6 @@
 <template>
 <a-card>
-  <template slot="title">
+  <template v-slot:title>
     <h1>亲戚计算器（开发中）</h1>
   </template>
   <RelationSelect/>

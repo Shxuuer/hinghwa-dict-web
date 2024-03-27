@@ -1,4 +1,5 @@
 export const COS_URL = 'https://cos.edialect.top/'
 export const BASE_URL = process.env.NODE_ENV === 'development'
+  // ? 'http://127.0.0.1:4523/m1/404238-0-default'
   ? 'https://api.pxm.test.edialect.top'
   : 'https://api.pxm.edialect.top'

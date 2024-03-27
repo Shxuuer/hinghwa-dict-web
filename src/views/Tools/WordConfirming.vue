@@ -6,32 +6,40 @@
       :loading="{spinning: spinning, delay: 500}"
       rowKey="application"
     >
-      <span slot="customTitle"> Name</span>
+      <template v-slot:customTitle>
+<span > Name</span>
+</template>
 
-      <div slot="word" slot-scope="text">
+      <template v-slot:word="text">
+<div  >
         <router-link v-if="text.word" :to="{name:'WordDetails',params:{id:text.word}}">
           {{ text.content.word }}
         </router-link>
         <a-tooltip v-else>
-          <template slot="title">
+          <template v-slot:title>
             这是一个申请新创建的词条
           </template>
           {{ text.content.word }}
         </a-tooltip>
       </div>
+</template>
 
-      <div slot="contributor" slot-scope="text">
+      <template v-slot:contributor="text">
+<div  >
         <router-link v-if="text" :to="{name:'UserDetails',params:{id:text.contributor.id}}">
           <a-avatar :src="text.contributor.avatar"></a-avatar>
           {{ text.contributor.nickname }}
         </router-link>
       </div>
+</template>
 
-      <div slot="action" slot-scope="text">
+      <template v-slot:action="text">
+<div  >
         <router-link :to="{name:'Application',params:{id:text.application}}">
           <a-button>进入审核</a-button>
         </router-link>
       </div>
+</template>
     </a-table>
   </a-card>
 </template>
@@ -79,11 +87,6 @@ export default {
     }
   },
   async created () {
-    await this.$store.dispatch('userUpdate')
-    if (this.$store.getters.user.is_admin === false) {
-      this.$message.error('仅管理员有权访问该模块！或请重新登录！')
-      this.$router.push({ name: 'Tools' })
-    }
     axios.get('/words/applications').then(res => {
       this.list = res.data.applications
     })
